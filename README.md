@@ -2,11 +2,11 @@
 
 Web based audio library for chilren. Made for the Raspberry Pi 7" Touchscreen.
 
-![./design/export/Playing.png]
+![Playing](./design/export/Playing.png)
 
 ## Goals
 
-- provide a children friendly touch interface for browsing and licening to music and audio books
+- provide a children friendly touch interface for browsing and lisening to music and audio books
 - make it work on the Raspberry PI Model 3 B together with the 7" Touchscreen
 - make it work on the included Chromium from Raspbian (Raspberry Pi Debian) in kiosk mode
 - make it startup on boot and prevent escaping (ecaping should only be possible with a keyboard)
