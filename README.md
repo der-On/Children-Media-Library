@@ -2,6 +2,8 @@
 
 Web based audio library for chilren. Made for the Raspberry Pi 7" Touchscreen.
 
+![./design/export/Playing.png]
+
 ## Goals
 
 - provide a children friendly touch interface for browsing and licening to music and audio books
