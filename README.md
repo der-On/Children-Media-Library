@@ -2,6 +2,8 @@
 
 Web based audio library for children. Made for the Raspberry Pi 7" Touchscreen.
 
+![3d Model](./design/renders/children-audio-library-model-day.png)
+
 ![Playing](./design/export/Playing.png)
 
 ## Goals
