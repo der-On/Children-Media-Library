@@ -1,0 +1,38 @@
+@import "variables.css";
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+.main {
+  background-color: var(--color-blue);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.albums {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: var(--controls-height);
+  overflow: auto;
+}
+.album__cover {
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  background: var(--color-white);
+  width: var(--cover-width);
+  height: var(--cover-height);
+  margin: 0;
+  padding: 0;
+}

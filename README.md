@@ -17,3 +17,9 @@ Web based audio library for children. Made for the Raspberry Pi 7" Touchscreen.
 - [ ] make it optionally shutdown system automaticly after given time of inactivity
 - [ ] make it work completely offline
 - [ ] provide a CLI to rescan library folder(s) and stop/start/maintain it
+
+## Develop
+
+```
+LIBRARY_PATH=~/Music docker-compose up --build
+```

@@ -2,10 +2,36 @@
   "name": "children-audio-library",
   "version": "0.0.1",
   "description": "Web based children audio library",
-  "main": "index.js",
+  "main": "server.js",
+  "repository": "https://github.com/der-On/Children-Audio-Library.git",
   "scripts": {
+    "start": "node server.js",
+    "dev": "node node_modules/.bin/nodemon server.js",
+    "cli": "node cli.js $@",
+    "scan": "node cli.js scan",
+    "help": "node cli.js help",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Ondrej Brinkel <info@anzui.de>",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "fs-extra": "^4.0.2",
+    "koa": "^2.4.1",
+    "koa-router": "^7.2.1",
+    "koa-sendfile": "^2.0.0",
+    "koa-static": "^4.0.1",
+    "lodash": "^4.17.4",
+    "sha1": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.12.1"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*",
+      "library/*",
+      "Dockerfile",
+      "docker-compose.*"
+    ]
+  }
 }

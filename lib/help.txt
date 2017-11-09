@@ -1,0 +1,8 @@
+Usage:
+
+npm run [action]
+
+Actions:
+
+scan    - Scans the library folders
+help    - Displays this help

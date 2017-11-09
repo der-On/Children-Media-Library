@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Children Audio Library</title>
+    <link rel="stylesheet" href="css/mavo.css">
+    <link rel="stylesheet" href="css/app.css">
+    <script src="js/mavo.js"></script>
+  </head>
+  <body>
+    <main
+      id="main"
+      class="main"
+      mv-app="childrenAudioLibrary"
+      mv-storage="./library.json">
+      <ul
+        class="albums"
+        property="albums">
+        <li
+          class="album"
+          property="albums"
+          mv-multiple>
+          <figure
+            class="album__cover"
+            onclick="app.handleAlbumCoverClick('[id]')">
+            <img
+              src="[cover]"
+              alt="[title]"
+            />
+          </figure>
+        </li>
+      </ul>
+    </main>
+    <script src="js/app.js"></script>
+  </body>
+</html>
