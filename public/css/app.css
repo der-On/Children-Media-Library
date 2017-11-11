@@ -33,6 +33,9 @@ html, body {
 }
 .albums__group {
   display: inline-block;
+  max-width: 100vw;
+  white-space: normal;
+  vertical-align: top;
 }
 .albums__album {
   display: inline-block;

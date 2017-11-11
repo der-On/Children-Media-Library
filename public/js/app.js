@@ -7,6 +7,8 @@ const app = {
       vnode.state.store.set('selectedAlbum', album);
     };
 
+    window.addEventListener('resize', m.redraw.bind(m));
+
     fetch('./library.json')
     .then(res => {
       if (!res.ok) {
