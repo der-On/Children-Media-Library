@@ -15,12 +15,15 @@
   "author": "Ondrej Brinkel <info@anzui.de>",
   "license": "ISC",
   "dependencies": {
+    "es6-promise-series": "^0.2.2",
     "fs-extra": "^4.0.2",
     "koa": "^2.4.1",
     "koa-router": "^7.2.1",
     "koa-sendfile": "^2.0.0",
     "koa-static": "^4.0.1",
     "lodash": "^4.17.4",
+    "musicbrainz": "^0.2.6",
+    "node-fetch": "^1.7.3",
     "sha1": "^1.1.1"
   },
   "devDependencies": {
