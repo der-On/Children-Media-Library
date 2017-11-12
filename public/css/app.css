@@ -12,7 +12,7 @@ html, body {
   font-family: 'Open Sans';
   font-size: 12px;
   font-weight: normal;
-  line-height: 1.25;
+  line-height: 1.5;
 }
 .icon {
   font-family: 'Material Icons';
@@ -54,8 +54,25 @@ html, body {
   vertical-align: top;
 }
 .albums__album {
+  position: relative;
   display: inline-block;
   margin: var(--grid-gutter);
+}
+.albums__album-icon {
+  position: absolute;
+  font-size: var(--icon-size);
+  line-height: 1;
+  top: 50%;
+  left: 50%;
+  margin-left: calc(var(--icon-size) * -0.5);
+  margin-top: calc(var(--icon-size) * -0.5);
+  text-shadow: 0px 0px 10px var(--color-black);
+  pointer-events: none;
+  transition: all 0.25s linear;
+  opacity: 1;
+}
+.albums__album-icon.is-hidden {
+  opacity: 0;
 }
 .album__cover {
   border: 1px solid var(--color-black);
@@ -99,23 +116,24 @@ html, body {
   padding: var(--grid-gutter);
 }
 
-.controls__album-title,
+.controls__album-track,
 .controls__playback {
   position: absolute;
   left: calc(var(--cover-width) + (var(--grid-gutter) * 2))
 }
-.controls__album-title {
-  bottom: 2rem;
+.controls__album-track {
+  padding-left: var(--grid-gutter);
+  bottom: var(--grid-gutter);
 }
 .controls__playback {
-  top: var(--grid-gutter);
+  top: calc(var(--grid-gutter) * 0.5);
   right: var(--grid-gutter);
   bottom: 5rem;
 }
 .controls__playback-icon {
   position: absolute;
   top: 0;
-  font-size: 62px;
+  font-size: var(--icon-size);
   line-height: 1;
   cursor: pointer;
 }
@@ -124,7 +142,33 @@ html, body {
 }
 .controls__playback-icon--prev {
   left: 50%;
+  margin-left: calc(var(--icon-size) * -0.5);
 }
 .controls__playback-icon--next {
   right: 0;
+}
+.controls__playback-progress {
+  position: absolute;
+  left: var(--grid-gutter);
+  right: 0;
+  top: calc(var(--icon-size) + var(--grid-gutter));
+  height: var(--grid-gutter);
+  background: rgba(255, 255, 255, 0.25);
+}
+.controls__playback-progress-bar {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+}
+.controls__playback-progress-handle {
+  position: absolute;
+  top: calc(var(--grid-gutter) * -1);
+  bottom: calc(var(--grid-gutter) * -1);
+  width: var(--grid-gutter);
+  margin-left: calc(var(--grid-gutter) * -0.5);
+  background: var(--color-white);
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }

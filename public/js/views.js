@@ -19,8 +19,8 @@ function audioView(vnode) {
     id: 'controls__playback-audio',
     src: album ? `./library/${encodeURIComponent(album.media[playingTrack])}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
-    onpause: vnode.state.pause,
-    onplay: album ?_.partial(vnode.state.play, album.id) : null
+    onpause: vnode.state.handleAudioPause,
+    onplay: vnode.state.handleAudioPlay
   });
 }
 
@@ -52,32 +52,50 @@ function albumsAlbumView(vnode, album) {
   const isSelected = album.id === selectedAlbumId;
   const playingAlbumId = vnode.state.store.get('playingAlbum');
   const isPlaying = album.id === playingAlbumId;
+  const className = [];
   let onclick;
 
   if (!isPlaying && isSelected) {
     onclick = _.partial(vnode.state.play, album.id);
   } else if (isPlaying) {
-    onclick = playing ? vnode.state.pause : _.partial(vnode.state.play, album.id);
+    onclick = _.partial(playing ? vnode.state.pause : vnode.state.play, album.id);
   } else if (!isSelected) {
     onclick = _.partial(vnode.state.selectAlbum, album.id);
   }
+
+  if (isSelected) {
+    className.push('is-selected');
+  }
+  if (isPlaying && playing) {
+    className.push('is-playing');
+  }
+
   return m('.albums__album', {
-    className: isSelected ? 'is-selected' : '',
+    className: className.join(' '),
     key: album.id
-  }, albumCoverView(vnode, album, {
-    onclick
-  }));
+  }, [
+    albumCoverView(vnode, album, {
+      onclick
+    }),
+    m('i.icon.albums__album-icon', {
+      className: isPlaying && playing ? '' : 'is-hidden'
+    },'play_circle_filled')
+  ]);
 }
 
 function controlsView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
+  const playingTrack = vnode.state.store.get('playingTrack');
 
   return m('section.controls',
     album ? [
         m('.controls__album', albumCoverView(vnode, album, {
           onclick: _.partial(vnode.state.showFullScreenAlbumCover, album.id)
         })),
-        m('.controls__album-title', `${album.artist} - ${album.title}`),
+        m('.controls__album-track', [
+          `${album.artist} - ${album.title}`, m('br'),
+          `${playingTrack + 1} / ${album.media.length}`
+        ]),
         playbackControlsView(vnode, album)
     ] : null
   );
@@ -91,14 +109,30 @@ function playbackControlsView(vnode, album) {
 
   return m('.controls__playback', [
     m('i.icon.controls__playback-icon.controls__playback-icon--play', {
-      onclick: isPlaying && playing ? vnode.state.pause : _.partial(vnode.state.play, album.id)
+      onclick: isPlaying && _.partial(playing ? vnode.state.pause : vnode.state.play, album.id)
     }, isPlaying && playing ? 'pause' : 'play_arrow'),
-    playingTrack > 0 ? m('i.icon.controls__playback-icon.controls__playback-icon--prev', {
+    m('i.icon.controls__playback-icon.controls__playback-icon--prev', {
       onclick: vnode.state.prevTrack
-    }, 'skip_previous') : null,
+    }, 'skip_previous'),
     album.media.length > 0 && playingTrack < album.media.length - 1 ? m('i.icon.controls__playback-icon.controls__playback-icon--next', {
       onclick: vnode.state.nextTrack
-    }, 'skip_next') : null
+    }, 'skip_next') : null,
+    isPlaying ? playbackControlsProgressView(vnode) : null
+  ]);
+}
+
+function playbackControlsProgressView(vnode) {
+  const currentTime = vnode.state.store.get('playingCurrentTime', 0);
+  const duration = vnode.state.store.get('playingDuration', 0);
+  const progress = currentTime / duration;
+
+  return m('.controls__playback-progress', [
+    m('.controls__playback-progress-bar', {
+      style: `width: ${progress * 100}%`
+    }),
+    m('.controls__playback-progress-handle', {
+      style: `left: ${progress * 100}%`
+    })
   ]);
 }
 
