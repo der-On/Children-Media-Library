@@ -28,7 +28,7 @@ function albumsView(vnode) {
   const albums = _.get(vnode.state, 'library.albums', []);
   const groups = [];
   const coversWidth = Math.floor(window.innerWidth / (COVER_WIDTH + (GRID_GUTTER * 2.5)));
-  const coversHeight = Math.floor((window.innerHeight - 156) / (COVER_HEIGHT + (GRID_GUTTER * 2.5)));
+  const coversHeight = Math.floor((window.innerHeight - CONTROLS_HEIGHT) / (COVER_HEIGHT + (GRID_GUTTER * 2.5)));
   const groupSize = (coversWidth * coversHeight) - coversHeight;
   const numGroups = Math.ceil(albums.length / groupSize);
   const groupWidth = coversWidth * (COVER_WIDTH + GRID_GUTTER) - (GRID_GUTTER * 2);

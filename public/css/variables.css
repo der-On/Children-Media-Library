@@ -8,7 +8,7 @@
   --box-shadow-selected: 0px 0px 4px rgba(255, 255, 255, 1);
   --cover-width: 144px;
   --cover-height: 144px;
-  --controls-height: 156px;
+  --controls-height: calc(var(--cover-height) + (var(--grid-gutter) * 2));
   --grid-gutter: 12px;
   --icon-size: 62px;
 }
