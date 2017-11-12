@@ -3,8 +3,24 @@ const app = {
   oninit: (vnode) => {
     vnode.state.store = store();
 
-    vnode.state.handleAlbumClick = function(album) {
-      vnode.state.store.set('selectedAlbum', album);
+    vnode.state.selectAlbum = function(albumId) {
+      vnode.state.store.set('selectedAlbum', albumId);
+    };
+
+    vnode.state.playAlbum = function(albumId) {
+
+    };
+
+    vnode.state.showFullScreenAlbumCover = function(albumId) {
+      vnode.state.store.set('fullscreenAlbum', albumId);
+    };
+
+    vnode.state.hideFullScreenAlbumCover = function() {
+      vnode.state.store.set('fullscreenAlbum', null);
+    };
+
+    vnode.state.getAlbumById = function(albumId) {
+      return _.find(_.get(vnode.state, 'library.albums', []), ['id', albumId]);
     };
 
     window.addEventListener('resize', m.redraw.bind(m));
@@ -18,7 +34,8 @@ const app = {
       return res.json();
     })
     .then(library => {
-      vnode.state.store.set('library', library);
+      vnode.state.library = library;
+      m.redraw();
     })
     .catch(console.error.bind(console));
   }

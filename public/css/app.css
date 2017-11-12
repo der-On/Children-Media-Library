@@ -40,18 +40,31 @@ html, body {
 .albums__album {
   display: inline-block;
   margin: var(--grid-gutter);
-  cursor: pointer;
 }
 .album__cover {
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
-  background: var(--color-white);
+  background-color: var(--color-white);
   width: var(--cover-width);
   height: var(--cover-height);
   margin: 0;
   padding: 0;
   background-position: center center;
   background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+.album__cover--fullscreen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-black);
+  background-size: contain;
+  width: auto;
+  height: auto;
+  box-shadow: none;
 }
 
 .controls {
