@@ -104,8 +104,13 @@ html, body {
   width: auto;
   height: auto;
   box-shadow: none;
+  transition: all 0.25s linear;
+  opacity: 1;
 }
-
+.album__cover--fullscreen.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 .controls {
   position: absolute;
   bottom: 0;
