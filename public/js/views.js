@@ -33,6 +33,7 @@ function albumsGroupView(vnode, width, albums, index) {
 }
 
 function albumsAlbumView(vnode, album) {
+  const playing = vnode.state.store.get('playing', false);
   const selectedAlbumId = vnode.state.store.get('selectedAlbum');
   const isSelected = album.id === selectedAlbumId;
   const playingAlbumId = vnode.state.store.get('playingAlbum');
@@ -42,7 +43,7 @@ function albumsAlbumView(vnode, album) {
   if (!isPlaying && isSelected) {
     onclick = _.partial(vnode.state.play, album.id);
   } else if (isPlaying) {
-    onclick = vnode.state.pause;
+    onclick = playing ? vnode.state.pause : _.partial(vnode.state.play, album.id);
   } else if (!isSelected) {
     onclick = _.partial(vnode.state.selectAlbum, album.id);
   }
