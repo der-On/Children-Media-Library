@@ -13,15 +13,12 @@ function appView(vnode) {
 function albumsView(vnode) {
   const albums = _.get(vnode.state, 'library.albums', []);
   const groups = [];
-  const coversWidth = Math.floor(window.innerWidth / (144 + 12));
-  const coversHeight = Math.floor((window.innerHeight - 156) / (144 + 12));
-  const groupSize = coversWidth * coversHeight;
+  const coversWidth = Math.floor(window.innerWidth / (COVER_WIDTH + (GRID_GUTTER * 2.5)));
+  const coversHeight = Math.floor((window.innerHeight - 156) / (COVER_HEIGHT + (GRID_GUTTER * 2.5)));
+  const groupSize = (coversWidth * coversHeight) - coversHeight;
   const numGroups = Math.ceil(albums.length / groupSize);
-  const groupWidth = coversWidth * (144 + 12) - 24;
-  console.log({
-    coversWidth, coversHeight, groupSize, numGroups
-  });
-
+  const groupWidth = coversWidth * (COVER_WIDTH + GRID_GUTTER) - (GRID_GUTTER * 2);
+  
   for(let groupNum = 0; groupNum < numGroups; groupNum++) {
     groups.push(albums.slice(groupNum * groupSize, (groupNum * groupSize) + groupSize));
   }

@@ -1,0 +1,3 @@
+const GRID_GUTTER = 12;
+const COVER_WIDTH = 144;
+const COVER_HEIGHT = 144;
