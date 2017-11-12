@@ -12,7 +12,10 @@ const app = {
       console.log('play', albumId);
       vnode.state.store.set({
         playingAlbum: albumId,
-        playing: true
+        playingTrack: vnode.state.store.get('playingAlbum') !== albumId
+          ? 0
+          : vnode.state.store.get('playingTrack', 0),
+        playing: true,
       });
       vnode.state.audioElement.play();
     };
@@ -21,6 +24,30 @@ const app = {
       console.log('pause');
       vnode.state.store.set('playing', false);
       vnode.state.audioElement.pause();
+    };
+
+    vnode.state.nextTrack = function() {
+      console.log('nextTrack');
+      const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+      if (!album) {
+        return;
+      }
+
+      const nextTrack = vnode.state.store.get('playingTrack', 0) + 1;
+      vnode.state.store.set('playingTrack', Math.min(nextTrack, album.media.length - 1));
+      vnode.state.audioElement.play();
+    };
+
+    vnode.state.prevTrack = function() {
+      console.log('prevTrack');
+      const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+      if (!album) {
+        return;
+      }
+
+      const prevTrack = vnode.state.store.get('playingTrack', 0) - 1;
+      vnode.state.store.set('playingTrack', Math.max(prevTrack, 0));
+      vnode.state.audioElement.play();
     };
 
     vnode.state.showFullScreenAlbumCover = function(albumId) {
@@ -38,7 +65,10 @@ const app = {
     };
 
     vnode.state.handleAudioTimeupdate = function (event) {
-      console.log(event);
+      vnode.state.store.set({
+        playingCurrentTime: vnode.state.audioElement.currentTime,
+        palyingDuration: vnode.state.audioElement.duration
+      });
     };
 
     window.addEventListener('resize', m.redraw.bind(m));

@@ -1,4 +1,5 @@
 @import "variables.css";
+@import "fonts.css";
 
 * {
   box-sizing: border-box;
@@ -12,6 +13,14 @@ html, body {
   font-size: 12px;
   font-weight: normal;
   line-height: 1.25;
+}
+.icon {
+  font-family: 'Material Icons';
+  font-size: inherit;
+  font-style: normal;
+  vertical-align: middle;
+  line-height: inherit;
+  display: inline-block;
 }
 .main {
   background-color: var(--color-blue);
@@ -99,5 +108,23 @@ html, body {
   bottom: 2rem;
 }
 .controls__playback {
+  top: var(--grid-gutter);
+  right: var(--grid-gutter);
   bottom: 5rem;
+}
+.controls__playback-icon {
+  position: absolute;
+  top: 0;
+  font-size: 62px;
+  line-height: 1;
+  cursor: pointer;
+}
+.controls__playback-icon--play {
+  left: 0;
+}
+.controls__playback-icon--prev {
+  left: 50%;
+}
+.controls__playback-icon--next {
+  right: 0;
 }

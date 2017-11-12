@@ -13,10 +13,11 @@ function appView(vnode) {
 
 function audioView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+  const playingTrack = vnode.state.store.get('playingTrack');
 
   return m('audio.audio', {
     id: 'controls__playback-audio',
-    src: album ? `./library/${encodeURIComponent(album.media[0])}` : '',
+    src: album ? `./library/${encodeURIComponent(album.media[playingTrack])}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
     onpause: vnode.state.pause,
     onplay: album ?_.partial(vnode.state.play, album.id) : null
@@ -85,10 +86,19 @@ function controlsView(vnode) {
 function playbackControlsView(vnode, album) {
   const playing = vnode.state.store.get('playing', false);
   const playingAlbumId = vnode.state.store.get('playingAlbum');
+  const playingTrack = vnode.state.store.get('playingTrack', 0);
   const isPlaying = album.id === playingAlbumId;
 
   return m('.controls__playback', [
-    isPlaying && playing ? 'playing' : null,
+    m('i.icon.controls__playback-icon.controls__playback-icon--play', {
+      onclick: isPlaying && playing ? vnode.state.pause : _.partial(vnode.state.play, album.id)
+    }, isPlaying && playing ? 'pause' : 'play_arrow'),
+    playingTrack > 0 ? m('i.icon.controls__playback-icon.controls__playback-icon--prev', {
+      onclick: vnode.state.prevTrack
+    }, 'skip_previous') : null,
+    album.media.length > 0 && playingTrack < album.media.length - 1 ? m('i.icon.controls__playback-icon.controls__playback-icon--next', {
+      onclick: vnode.state.nextTrack
+    }, 'skip_next') : null
   ]);
 }
 
