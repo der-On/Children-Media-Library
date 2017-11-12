@@ -18,7 +18,7 @@ function albumsView(vnode) {
   const groupSize = (coversWidth * coversHeight) - coversHeight;
   const numGroups = Math.ceil(albums.length / groupSize);
   const groupWidth = coversWidth * (COVER_WIDTH + GRID_GUTTER) - (GRID_GUTTER * 2);
-  
+
   for(let groupNum = 0; groupNum < numGroups; groupNum++) {
     groups.push(albums.slice(groupNum * groupSize, (groupNum * groupSize) + groupSize));
   }
@@ -33,23 +33,48 @@ function albumsGroupView(vnode, width, albums, index) {
 }
 
 function albumsAlbumView(vnode, album) {
+  const selectedAlbumId = vnode.state.store.get('selectedAlbum');
+  const isSelected = album.id === selectedAlbumId;
+  const playingAlbumId = vnode.state.store.get('playingAlbum');
+  const isPlaying = album.id === playingAlbumId;
+  let onclick;
+
+  if (!isPlaying && isSelected) {
+    onclick = _.partial(vnode.state.play, album.id);
+  } else if (isPlaying) {
+    onclick = vnode.state.pause;
+  } else if (!isSelected) {
+    onclick = _.partial(vnode.state.selectAlbum, album.id);
+  }
   return m('.albums__album', {
+    className: isSelected ? 'is-selected' : '',
     key: album.id
   }, albumCoverView(vnode, album, {
-    onclick: _.partial(vnode.state.selectAlbum, album.id)
+    onclick
   }));
 }
 
 function controlsView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
 
-  return m('section.controls', [
+  return m('section.controls',
     album ? [
         m('.controls__album', albumCoverView(vnode, album, {
           onclick: _.partial(vnode.state.showFullScreenAlbumCover, album.id)
         })),
-        m('.controls__album-title', `${album.artist} - ${album.title}`)
+        m('.controls__album-title', `${album.artist} - ${album.title}`),
+        playbackControlsView(vnode, album)
     ] : null
+  );
+}
+
+function playbackControlsView(vnode, album) {
+  const playing = vnode.state.store.get('playing', false);
+  const playingAlbumId = vnode.state.store.get('playingAlbum');
+  const isPlaying = album.id === playingAlbumId;
+
+  return m('.controls__playback', [
+    isPlaying && playing ? 'playing' : null
   ]);
 }
 

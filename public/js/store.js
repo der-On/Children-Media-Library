@@ -1,7 +1,9 @@
 function store() {
   const store = {};
   store.set = function (key, value) {
-    window.localStorage[key] = JSON.stringify(value);
+    typeof key === 'string'
+      ? window.localStorage[key] = JSON.stringify(value)
+      : _.assign(window.localStorage, _.mapValues(key, JSON.stringify.bind(JSON)))
     m.redraw();
   };
   store.get = function (key, defaultValue) {

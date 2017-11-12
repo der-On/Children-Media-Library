@@ -8,6 +8,10 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  font-family: 'Open Sans';
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 1.25;
 }
 .main {
   background-color: var(--color-blue);
@@ -42,6 +46,7 @@ html, body {
   margin: var(--grid-gutter);
 }
 .album__cover {
+  border: 1px solid var(--color-black);
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
   background-color: var(--color-white);
@@ -53,6 +58,11 @@ html, body {
   background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;
+  transition: all 0.25s linear;
+}
+.albums__album.is-selected .album__cover {
+  border: 1px solid var(--color-white);
+  box-shadow: var(--box-shadow-selected);
 }
 .album__cover--fullscreen {
   position: absolute;
@@ -77,8 +87,14 @@ html, body {
   padding: var(--grid-gutter);
 }
 
-.controls__album-title {
+.controls__album-title,
+.controls__playback {
   position: absolute;
-  bottom: 2rem;
   left: calc(var(--cover-width) + (var(--grid-gutter) * 2))
+}
+.controls__album-title {
+  bottom: 2rem;
+}
+.controls__playback {
+  bottom: 5rem;
 }

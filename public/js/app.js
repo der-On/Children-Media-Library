@@ -4,18 +4,30 @@ const app = {
     vnode.state.store = store();
 
     vnode.state.selectAlbum = function(albumId) {
+      console.log('selectAlbum', albumId);
       vnode.state.store.set('selectedAlbum', albumId);
     };
 
-    vnode.state.playAlbum = function(albumId) {
+    vnode.state.play = function(albumId) {
+      console.log('play', albumId);
+      vnode.state.store.set({
+        playingAlbum: albumId,
+        playing: true
+      });
+    };
 
+    vnode.state.pause = function() {
+      console.log('pause');
+      vnode.state.store.set('playing', false);
     };
 
     vnode.state.showFullScreenAlbumCover = function(albumId) {
+      console.log('showFullScreenAlbumCover', albumId);
       vnode.state.store.set('fullscreenAlbum', albumId);
     };
 
     vnode.state.hideFullScreenAlbumCover = function() {
+      console.log('hideFullScreenAlbumCover');
       vnode.state.store.set('fullscreenAlbum', null);
     };
 
