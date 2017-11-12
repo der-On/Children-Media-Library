@@ -2,12 +2,25 @@ function appView(vnode) {
   const fullscreenAlbum = vnode.state.getAlbumById(vnode.state.store.get('fullscreenAlbum'));
 
   return m('main.main', [
+    audioView(vnode),
     albumsView(vnode),
     controlsView(vnode),
     fullscreenAlbum
       ? fullscreenAlbumCoverView(vnode, fullscreenAlbum)
       : null
   ]);
+}
+
+function audioView(vnode) {
+  const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+
+  return m('audio.audio', {
+    id: 'controls__playback-audio',
+    src: album ? `./library/${encodeURIComponent(album.media[0])}` : '',
+    ontimeupdate: vnode.state.handleAudioTimeupdate,
+    onpause: vnode.state.pause,
+    onplay: album ?_.partial(vnode.state.play, album.id) : null
+  });
 }
 
 function albumsView(vnode) {
@@ -75,7 +88,7 @@ function playbackControlsView(vnode, album) {
   const isPlaying = album.id === playingAlbumId;
 
   return m('.controls__playback', [
-    isPlaying && playing ? 'playing' : null
+    isPlaying && playing ? 'playing' : null,
   ]);
 }
 

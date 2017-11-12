@@ -22,6 +22,9 @@ html, body {
   bottom: 0;
   color: var(--color-white);
 }
+.audio {
+  display: none;
+}
 .albums {
   list-style-type: none;
   margin: 0;

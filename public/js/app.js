@@ -14,11 +14,13 @@ const app = {
         playingAlbum: albumId,
         playing: true
       });
+      vnode.state.audioElement.play();
     };
 
     vnode.state.pause = function() {
       console.log('pause');
       vnode.state.store.set('playing', false);
+      vnode.state.audioElement.pause();
     };
 
     vnode.state.showFullScreenAlbumCover = function(albumId) {
@@ -33,6 +35,10 @@ const app = {
 
     vnode.state.getAlbumById = function(albumId) {
       return _.find(_.get(vnode.state, 'library.albums', []), ['id', albumId]);
+    };
+
+    vnode.state.handleAudioTimeupdate = function (event) {
+      console.log(event);
     };
 
     window.addEventListener('resize', m.redraw.bind(m));
@@ -50,6 +56,9 @@ const app = {
       m.redraw();
     })
     .catch(console.error.bind(console));
+  },
+  oncreate: function(vnode) {
+    vnode.state.audioElement = document.getElementById('controls__playback-audio');
   }
 };
 
