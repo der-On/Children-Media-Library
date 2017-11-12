@@ -53,6 +53,8 @@ function albumsAlbumView(vnode, album) {
 
   if (!isPlaying && isSelected) {
     onclick = _.partial(vnode.state.play, album.id);
+  } else if (isPlaying && !isSelected) {
+    onclick = _.partial(vnode.state.selectAlbum, album.id);
   } else if (isPlaying) {
     onclick = _.partial(playing ? vnode.state.pause : vnode.state.play, album.id);
   } else if (!isSelected) {
