@@ -117,7 +117,6 @@ const app = {
     };
 
     vnode.state.handleProgressHandleMouseMove = function (event) {
-      console.log(event.clientX);
       vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
     };
 
@@ -164,16 +163,18 @@ const app = {
     .catch(console.error.bind(console));
   },
   oncreate: function(vnode) {
+    const albumId = vnode.state.store.get('playingAlbum');
     const playing = vnode.state.store.get('playing');
     const currentTime = vnode.state.store.get('playingCurrentTime');
     vnode.state.audioElement = document.getElementById('controls__playback-audio');
 
     // restore previous play state
     if (playing) {
+      vnode.state.pause(albumId);
+
       vnode.state.whenAudioLoaded()
       .then(() => {
         vnode.state.audioElement.currentTime = currentTime;
-        vnode.state.audioElement.play();
       });
     }
   }

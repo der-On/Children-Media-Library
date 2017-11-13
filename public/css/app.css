@@ -47,6 +47,7 @@ html, body {
   overflow-x: scroll;
   overflow-y: hidden;
   white-space: nowrap;
+  line-height: 1;
 }
 .albums__group {
   display: inline-block;
@@ -57,7 +58,7 @@ html, body {
 .albums__album {
   position: relative;
   display: inline-block;
-  margin: var(--grid-gutter);
+  margin: var(--grid-gutter) 0  0 var(--grid-gutter);
 }
 .albums__album-icon {
   position: absolute;
@@ -156,10 +157,10 @@ html, body {
 }
 .controls__playback-progress {
   position: absolute;
-  left: var(--grid-gutter);
+  left: calc(var(--icon-size) * 0.35);
   right: 0;
   top: calc(var(--icon-size) + var(--grid-gutter));
-  height: var(--grid-gutter);
+  height: calc(var(--icon-size) * 0.25);
   background: rgba(255, 255, 255, 0.25);
 }
 .controls__playback-progress-bar {
@@ -171,12 +172,13 @@ html, body {
 }
 .controls__playback-progress-handle {
   position: absolute;
-  top: calc(var(--grid-gutter) * -1);
-  bottom: calc(var(--grid-gutter) * -1);
-  width: var(--grid-gutter);
-  margin-left: calc(var(--grid-gutter) * -0.5);
+  top: calc(var(--icon-size) * -0.25);
+  bottom: calc(var(--icon-size) * -0.25);
+  width: calc(var(--icon-size) * 0.25);
+  margin-left: calc(var(--icon-size) * -0.125);
   background: var(--color-white);
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
+  transform: translate(0, 0);
   cursor: pointer;
 }
 .controls__playback-progress-handle:after {

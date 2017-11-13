@@ -28,11 +28,11 @@ function audioView(vnode) {
 function albumsView(vnode) {
   const albums = _.get(vnode.state, 'library.albums', []);
   const groups = [];
-  const coversWidth = Math.floor(window.innerWidth / (COVER_WIDTH + (GRID_GUTTER * 2.5)));
-  const coversHeight = Math.floor((window.innerHeight - CONTROLS_HEIGHT) / (COVER_HEIGHT + (GRID_GUTTER * 2.5)));
-  const groupSize = (coversWidth * coversHeight) - coversHeight;
+  const coversWidth = Math.floor(window.innerWidth / (COVER_WIDTH + GRID_GUTTER));
+  const coversHeight = Math.floor((window.innerHeight - CONTROLS_HEIGHT) / (COVER_HEIGHT + GRID_GUTTER));
+  const groupSize = (coversWidth * coversHeight);
   const numGroups = Math.ceil(albums.length / groupSize);
-  const groupWidth = coversWidth * (COVER_WIDTH + GRID_GUTTER) - (GRID_GUTTER * 2);
+  const groupWidth = coversWidth * (COVER_WIDTH + GRID_GUTTER);
 
   for(let groupNum = 0; groupNum < numGroups; groupNum++) {
     groups.push(albums.slice(groupNum * groupSize, (groupNum * groupSize) + groupSize));
