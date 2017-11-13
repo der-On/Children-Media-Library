@@ -180,9 +180,9 @@ html, body {
 }
 .controls__playback-progress-handle:after {
   position: absolute;
-  left: -15px;
+  left: -30px;
   top: -15px;
-  right: -15px;
+  right: -30px;
   bottom: -15px;
   cursor: pointer;
   content: '';
