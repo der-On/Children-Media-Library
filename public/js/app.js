@@ -132,7 +132,7 @@ const app = {
       const progressElement = document.getElementById('controls__playback-progress');
       const box = progressElement.getBoundingClientRect();
       const width = box.right - box.left;
-      const time = (Math.max(x - box.left, 0) / width) * vnode.state.audioElement.duration;
+      const time = (Math.max(x - box.left, 0.01) / width) * vnode.state.audioElement.duration;
       vnode.state.audioElement.currentTime = time;
     };
 
