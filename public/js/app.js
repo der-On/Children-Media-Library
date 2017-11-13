@@ -1,6 +1,8 @@
 const app = {
   view: appView,
   oninit: (vnode) => {
+    let isDraggingProgressHandle = false;
+
     vnode.state.store = store();
 
     vnode.state.selectAlbum = function(albumId) {
@@ -97,10 +99,54 @@ const app = {
     };
 
     vnode.state.handleAudioTimeupdate = function (event) {
+      const currentTime = vnode.state.audioElement.currentTime;
+      const duration = vnode.state.audioElement.duration;
+
       vnode.state.store.set({
-        playingCurrentTime: vnode.state.audioElement.currentTime,
-        playingDuration: vnode.state.audioElement.duration
+        playingCurrentTime: currentTime,
+        playingDuration: duration
       });
+
+      // skip to next track if reached end
+      if (currentTime === duration) {
+        vnode.state.nextTrack();
+      }
+    };
+
+    vnode.state.handleProgressHandleMouseDown = function (event) {
+      if (isDraggingProgressHandle) {
+        return false;
+      }
+
+      isDraggingProgressHandle = true;
+    };
+
+    vnode.state.handleProgressHandleMouseMove = function (event) {
+      if (!isDraggingProgressHandle) {
+        return false;
+      }
+
+      document.body.addEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
+
+      vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
+    };
+
+    vnode.state.handleProgressHandleMouseUp = function (event) {
+      if (!isDraggingProgressHandle) {
+        return false;
+      }
+
+      document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
+      isDraggingProgressHandle = false;
+      vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
+    };
+
+    vnode.state.updateCurrentTimeFromProgressDrag = function (x) {
+      const progressElement = document.getElementById('controls__playback-progress');
+      const box = progressElement.getBoundingClientRect();
+      const width = box.right - box.left;
+      const time = (Math.max(x - box.left, 0) / width) * vnode.state.audioElement.duration;
+      vnode.state.audioElement.currentTime = time;
     };
 
     vnode.state.whenAudioLoaded = function() {

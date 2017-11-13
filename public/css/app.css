@@ -119,6 +119,7 @@ html, body {
   height: var(--controls-height);
   background: var(--color-dark-purple);
   padding: var(--grid-gutter);
+  overflow: hidden
 }
 
 .controls__album-track,
@@ -176,4 +177,15 @@ html, body {
   background: var(--color-white);
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+}
+.controls__playback-progress-handle:after {
+  position: absolute;
+  left: -15px;
+  top: -15px;
+  right: -15px;
+  bottom: -15px;
+  cursor: pointer;
+  content: '';
+  display: block;
+  background: transparent;
 }

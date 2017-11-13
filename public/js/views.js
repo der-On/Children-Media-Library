@@ -124,12 +124,17 @@ function playbackControlsProgressView(vnode) {
   const duration = vnode.state.store.get('playingDuration', 0);
   const progress = currentTime / duration;
 
-  return m('.controls__playback-progress', [
+  return m('.controls__playback-progress', {
+    id: 'controls__playback-progress'
+  }, [
     m('.controls__playback-progress-bar', {
       style: `width: ${progress * 100}%`
     }),
     m('.controls__playback-progress-handle', {
-      style: `left: ${progress * 100}%`
+      style: `left: ${progress * 100}%`,
+      onmousedown: vnode.state.handleProgressHandleMouseDown,
+      onmousemove: vnode.state.handleProgressHandleMouseMove,
+      onmousout: vnode.state.handleProgressHandleMouseUp
     })
   ]);
 }
