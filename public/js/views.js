@@ -1,5 +1,9 @@
 function appView(vnode) {
-  return m('main.main', [
+  const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+
+  return m('main.main', {
+    style: album ? `background-color: ${strToColor(album.src)};` : null
+  }, [
     audioView(vnode),
     albumsView(vnode),
     controlsView(vnode),
@@ -16,7 +20,8 @@ function audioView(vnode) {
     src: album ? `./library/${encodeURIComponent(album.media[playingTrack])}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
     onpause: vnode.state.handleAudioPause,
-    onplay: vnode.state.handleAudioPlay
+    onplay: vnode.state.handleAudioPlay,
+    preload: 'auto'
   });
 }
 
@@ -132,16 +137,14 @@ function playbackControlsProgressView(vnode) {
     }),
     m('.controls__playback-progress-handle', {
       style: `left: ${progress * 100}%`,
-      onmousedown: vnode.state.handleProgressHandleMouseDown,
-      onmousemove: vnode.state.handleProgressHandleMouseMove,
-      onmousout: vnode.state.handleProgressHandleMouseUp
+      onmousedown: vnode.state.handleProgressHandleMouseDown
     })
   ]);
 }
 
 function albumCoverView(vnode, album, args = {}) {
   return m('figure.album__cover', _.assign({
-    style: `background-image: url('./library/${encodeURIComponent(album.cover)}')`,
+    style: `background-color: ${strToColor(album.src)}; background-image: url('./library/${encodeURIComponent(album.cover)}');`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }
@@ -156,4 +159,22 @@ function fullscreenAlbumCoverView(vnode) {
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
   }) : null;
+}
+
+function strToColor(str) {
+  const h = hashCode(str) % 360;
+  return `hsl(${h}, 22%, 48%)`;
+}
+
+strToColor = _.memoize(strToColor);
+
+function hashCode(str) {
+  var hash = 0;
+  if (str.length == 0) return hash;
+  for (i = 0; i < str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = ((hash<<5)-hash)+char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
 }

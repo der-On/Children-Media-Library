@@ -1,8 +1,6 @@
 const app = {
   view: appView,
   oninit: (vnode) => {
-    let isDraggingProgressHandle = false;
-
     vnode.state.store = store();
 
     vnode.state.selectAlbum = function(albumId) {
@@ -114,30 +112,19 @@ const app = {
     };
 
     vnode.state.handleProgressHandleMouseDown = function (event) {
-      if (isDraggingProgressHandle) {
-        return false;
-      }
-
-      isDraggingProgressHandle = true;
+      document.body.addEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
+      document.body.addEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
     };
 
     vnode.state.handleProgressHandleMouseMove = function (event) {
-      if (!isDraggingProgressHandle) {
-        return false;
-      }
-
-      document.body.addEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
-
+      console.log(event.clientX);
       vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
     };
 
     vnode.state.handleProgressHandleMouseUp = function (event) {
-      if (!isDraggingProgressHandle) {
-        return false;
-      }
-
       document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
-      isDraggingProgressHandle = false;
+      document.body.removeEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
+      document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
       vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
     };
 
