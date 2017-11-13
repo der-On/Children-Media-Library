@@ -144,7 +144,7 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   return m('figure.album__cover', _.assign({
-    style: `background-color: ${albumColor(album)}; background-image: url('./library/${encodeURIComponent(album.cover)}');`,
+    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url('./library/${encodeURIComponent(album.cover)}');`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }
@@ -161,16 +161,18 @@ function fullscreenAlbumCoverView(vnode) {
   }) : null;
 }
 
-function albumColor(album) {
-  return strToColor(album.artist + album.title);
+function albumColor(album, saturation = 20, lightness = 50) {
+  return strToColor(album.artist + album.title, saturation, lightness);
 }
 
-function strToColor(str) {
+function strToColor(str, saturation = 20, lightness = 50) {
   const h = hashCode(str) % 360;
-  return `hsl(${h}, 22%, 48%)`;
+  return `hsl(${h}, ${saturation}%, ${lightness}%)`;
 }
 
-strToColor = _.memoize(strToColor);
+albumColor = _.memoize(albumColor, function (album, saturation, lightness) {
+  return album.id + saturation + lightness;
+});
 
 function hashCode(str) {
   var hash = 0;
