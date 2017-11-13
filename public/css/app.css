@@ -30,6 +30,7 @@ html, body {
   right: 0;
   bottom: 0;
   color: var(--color-white);
+  transition: all 0.25s linear;
 }
 .audio {
   display: none;

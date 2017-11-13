@@ -2,7 +2,7 @@ function appView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
 
   return m('main.main', {
-    style: album ? `background-color: ${strToColor(album.src)};` : null
+    style: album ? `background-color: ${albumColor(album)};` : null
   }, [
     audioView(vnode),
     albumsView(vnode),
@@ -144,7 +144,7 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   return m('figure.album__cover', _.assign({
-    style: `background-color: ${strToColor(album.src)}; background-image: url('./library/${encodeURIComponent(album.cover)}');`,
+    style: `background-color: ${albumColor(album)}; background-image: url('./library/${encodeURIComponent(album.cover)}');`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }
@@ -159,6 +159,10 @@ function fullscreenAlbumCoverView(vnode) {
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
   }) : null;
+}
+
+function albumColor(album) {
+  return strToColor(album.artist + album.title);
 }
 
 function strToColor(str) {
