@@ -1,5 +1,5 @@
 function appView(vnode) {
-  const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+  const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
 
   return m('main.main', {
     style: album ? `background-color: ${albumColor(album)};` : null
