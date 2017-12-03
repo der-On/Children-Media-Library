@@ -112,7 +112,7 @@ function playbackControlsView(vnode, album) {
 
   return m('.controls__playback', [
     m('i.icon.controls__playback-icon.controls__playback-icon--play', {
-      onclick: isPlaying && _.partial(playing ? vnode.state.pause : vnode.state.play, album.id)
+      onclick: _.partial(isPlaying && playing ? vnode.state.pause : vnode.state.play, album.id)
     }, isPlaying && playing ? 'pause' : 'play_arrow'),
     m('i.icon.controls__playback-icon.controls__playback-icon--prev', {
       onclick: vnode.state.prevTrack

@@ -11,7 +11,7 @@ const app = {
     vnode.state.play = function(albumId) {
       console.log('play', albumId);
       vnode.state.store.set({
-        selectAlbum: albumId,
+        selectedAlbum: albumId,
         playingAlbum: albumId,
         playingTrack: vnode.state.store.get('playingAlbum') !== albumId
           ? 0
