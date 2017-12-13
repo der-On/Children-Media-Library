@@ -14,5 +14,12 @@ sudo npm install npm pm2 -g
 echo "Installing package dependencies ..."
 npm install
 
-echo "Seting up autostart on system boot ..."
-sudo echo "sh ${PWD}/raspi/start.sh" >> /etc/xdg/lxsession/LXDE-pi/autostart
+echo "Seting up autostart on boot to desktop ..."
+echo "[Desktop Entry]
+Type=Application
+Exec=$PWD/raspi/start.sh
+Hidden=false
+X-GNOME-Autostart-enabled=true
+Name[en_US]=AutoChildrenAudioLibrary
+Name=AutoChildrenAudioLibrary
+Comment=Start Children Audio Library when GNOME starts" >> ~/.config/autostart/AutoChildrenAudioLibrary.desktop
