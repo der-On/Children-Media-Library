@@ -4,5 +4,5 @@ cd "$(dirname "$0")"
 cd ..
 
 pm2 start --name "children-audio-library" server.js
-/usr/bin/chromium-browser --noerordialogs --disable-session-crashed-bubble --disable-infobars --disable-pinch --overscoll-history-navigation=0 --kiosk http://localhost:8000
+/usr/bin/chromium-browser --noerrordialogs --disable-session-crashed-bubble --disable-infobars --disable-pinch --overscoll-history-navigation=0 --kiosk http://localhost:8000
 pm2 delete "children-audio-library"

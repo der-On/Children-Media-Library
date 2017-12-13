@@ -14,4 +14,5 @@ sudo npm install npm pm2 -g
 echo "Installing package dependencies ..."
 npm install
 
-echo "Now add 'sh $(dirname "$0")/start.sh' to /etc/rc.local"
+echo "Seting up autostart on system boot ..."
+sudo echo "sh ${PWD}/raspi/start.sh" >> /etc/xdg/lxsession/LXDE-pi/autostart
