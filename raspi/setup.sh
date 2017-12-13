@@ -22,4 +22,4 @@ Hidden=false
 X-GNOME-Autostart-enabled=true
 Name[en_US]=AutoChildrenAudioLibrary
 Name=AutoChildrenAudioLibrary
-Comment=Start Children Audio Library when GNOME starts" >> ~/.config/autostart/AutoChildrenAudioLibrary.desktop
+Comment=Start Children Audio Library when GNOME starts" > ~/.config/autostart/AutoChildrenAudioLibrary.desktop
