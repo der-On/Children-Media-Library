@@ -58,3 +58,16 @@ npm run scan
 ```
 
 It is recommended to add the `npm run scan` to a cron job or trigger it manually once you've added/changed the media library.
+
+## On the Raspberry Pi
+
+You must have rasbian installed on your Raspberry Pi.
+
+Do the configuration from above and then run:
+
+```bash
+./raspi/setup.sh
+sudo reboot
+```
+
+This will install all dependencies and make the audio library start on boot in kiosk mode.
