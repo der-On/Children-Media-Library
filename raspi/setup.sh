@@ -14,5 +14,4 @@ sudo npm install npm pm2 -g
 echo "Installing package dependencies ..."
 npm install
 
-echo "Adding startup script to /etc/rc.local"
-echo "$(dirname "$0")/start.sh" >> /etc/rc.local
+echo "Now add '$(dirname "$0")/start.sh' to /etc/rc.local"
