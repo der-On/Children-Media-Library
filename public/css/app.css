@@ -163,6 +163,7 @@ html, body {
   top: calc(var(--icon-size) + var(--grid-gutter));
   height: calc(var(--icon-size) * 0.25);
   background: rgba(255, 255, 255, 0.25);
+  z-index: 2;
 }
 .controls__playback-progress-bar {
   position: absolute;

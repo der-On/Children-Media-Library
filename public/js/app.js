@@ -116,15 +116,33 @@ const app = {
       document.body.addEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
     };
 
+    vnode.state.handleProgressHandleTouchStart = function (event) {
+      document.body.addEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
+      document.body.addEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
+      document.body.addEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
+    };
+
     vnode.state.handleProgressHandleMouseMove = function (event) {
       vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
     };
 
+    vnode.state.handleProgressHandleTouchMove = function (event) {
+      vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
+    };
+
     vnode.state.handleProgressHandleMouseUp = function (event) {
-      document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
       document.body.removeEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
       document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
       vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
+    };
+
+    vnode.state.handleProgressHandleTouchEnd = function (event) {
+      document.body.removeEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
+      document.body.removeEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
+      document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
+      if (event.touches) {
+        vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
+      }
     };
 
     vnode.state.updateCurrentTimeFromProgressDrag = function (x) {
