@@ -109,6 +109,7 @@ html, body {
   transition: all 0.25s linear;
   opacity: 1;
   border-radius: 0;
+  z-index: 10;
 }
 .album__cover--fullscreen.is-hidden {
   opacity: 0;
