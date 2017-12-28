@@ -140,7 +140,8 @@ const app = {
       document.body.removeEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
-      if (event.touches) {
+      
+      if (event.touches && event.touches.length > 0) {
         vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
       }
     };
