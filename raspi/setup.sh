@@ -15,6 +15,7 @@ echo "Installing package dependencies ..."
 npm install
 
 echo "Seting up autostart on boot to desktop ..."
+mkdir -p ~/.config/autostart
 echo "[Desktop Entry]
 Type=Application
 Exec=$PWD/raspi/start.sh
