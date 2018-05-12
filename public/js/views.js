@@ -17,7 +17,7 @@ function audioView(vnode) {
 
   return m('audio.audio', {
     id: 'controls__playback-audio',
-    src: album ? `./library/${encodePath(album.media[playingTrack])}` : '',
+    src: album ? `./library/${album.media[playingTrack]}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
     onpause: vnode.state.handleAudioPause,
     onplay: vnode.state.handleAudioPlay,
@@ -145,7 +145,7 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   return m('figure.album__cover', _.assign({
-    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url('./library/${encodePath(album.cover)}');`,
+    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url('./library/${album.cover}');`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }
@@ -156,7 +156,7 @@ function fullscreenAlbumCoverView(vnode) {
 
   return album ? m('figure.album__cover.album__cover--fullscreen', {
     className: fullscreenAlbumId !== album.id ? 'is-hidden' : '',
-    style: `background-image: url('./library/${encodePath(album.cover)}')`,
+    style: `background-image: url('./library/${album.cover}')`,
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
   }) : null;
