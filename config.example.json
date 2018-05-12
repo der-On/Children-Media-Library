@@ -1,7 +1,5 @@
 {
-  "library": [
-    "~/Music"
-  ],
+  "library": "~/Music",
   "port": 8000,
   "lastFmApiKey": "secret",
   "discogsConsumerKey": "secret",
