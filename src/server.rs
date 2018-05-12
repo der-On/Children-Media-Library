@@ -34,18 +34,18 @@ impl Service for MainService {
     type Error = Error;
     type Future = ResponseFuture;
 
-    fn call(&self, req: Request) -> Self::Future {
+    fn call(&self, mut req: Request) -> Self::Future {
         println!("{} {}", req.method(), req.path());
+
         if req.path().starts_with("/library/") == true {
             let new_uri_str = format!("{}", req.uri())
                 .replace("/library/", "/");
             let new_uri_str_decoded = percent_decode(new_uri_str.as_bytes())
                 .decode_utf8().unwrap();
 
-            println!("{}", new_uri_str_decoded);
             let new_uri: Uri = Uri::from_str(&new_uri_str_decoded).unwrap();
-            let new_req = Request::new(req.method().clone(), new_uri);
-            self.library_.call(new_req)
+            req.set_uri(new_uri);
+            self.library_.call(req)
         } else {
             self.public_.call(req)
         }
