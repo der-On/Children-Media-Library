@@ -1,4 +1,3 @@
-#[warn(non_snake_case)]
 extern crate serde;
 extern crate serde_json;
 
