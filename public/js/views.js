@@ -89,6 +89,8 @@ function albumsAlbumView(vnode, album) {
 function controlsView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
   const playingTrack = vnode.state.store.get('playingTrack');
+  const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
+  const duration = vnode.state.store.get('playingDuration', 0) || 0;
 
   return m('section.controls',
     album ? [
@@ -98,6 +100,11 @@ function controlsView(vnode) {
         m('.controls__album-track', [
           `${album.artist} - ${album.title}`, m('br'),
           `${playingTrack + 1} / ${album.media.length}`
+        ]),
+        m('.controls__duration', [
+          formatTime(currentTime),
+          ' / ',
+          formatTime(duration)
         ]),
         playbackControlsView(vnode, album)
     ] : null
@@ -125,9 +132,9 @@ function playbackControlsView(vnode, album) {
 }
 
 function playbackControlsProgressView(vnode) {
-  const currentTime = vnode.state.store.get('playingCurrentTime', 0);
-  const duration = vnode.state.store.get('playingDuration', 0);
-  const progress = currentTime / duration;
+  const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
+  const duration = vnode.state.store.get('playingDuration', 0) || 0;
+  const progress = duration != 0 ? currentTime / duration : 0;
 
   return m('.controls__playback-progress', {
     id: 'controls__playback-progress'
