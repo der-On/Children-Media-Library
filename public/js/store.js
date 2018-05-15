@@ -2,7 +2,7 @@ function store() {
   const store = {};
   let state = {};
 
-  const redrawDebounced = _.debounce(m.redraw.bind(m), 500);
+  const redrawThrottled = _.throttle(m.redraw, 500);
 
   try {
     state = JSON.parse(window.localStorage['childrenAudioLibrary']);
@@ -16,14 +16,14 @@ function store() {
       ? state[key] = value
       : _.assign(state, key);
     store.persist();
-    redrawDebounced();
+    redrawThrottled();
   };
 
   store.get = function (key, defaultValue) {
     return _.get(state, key, defaultValue);
   };
 
-  store.persist = _.debounce(function () {
+  store.persist = _.throttle(function () {
     window.localStorage.childrenAudioLibrary = JSON.stringify(state);
   }, 2000);
 
