@@ -2,6 +2,8 @@ function store() {
   const store = {};
   let state = {};
 
+  const redrawDebounced = _.debounce(m.redraw.bind(m), 500);
+
   try {
     state = JSON.parse(window.localStorage['childrenAudioLibrary']);
   } catch (err) {
@@ -14,7 +16,7 @@ function store() {
       ? state[key] = value
       : _.assign(state, key);
     store.persist();
-    m.redraw();
+    redrawDebounced();
   };
 
   store.get = function (key, defaultValue) {
