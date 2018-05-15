@@ -61,7 +61,7 @@ Then in a second terminal do the following to scan the music library
 
 ```bash
 docker-compose exec app
-npm run scan
+cargo run --bin cli scan
 ```
 
 Now open your browser pointing to `http://localhost:8000`.
@@ -71,8 +71,8 @@ Now open your browser pointing to `http://localhost:8000`.
 Do the configuration from above and then run:
 
 ```bash
-npm run scan
-npm start
+cargo run --bin cli scan
+cargo run --bin server
 ```
 
 This will scan the library and then start the server.
@@ -82,7 +82,7 @@ Now open your browser pointing to `http://localhost:8000`.
 To rescan the media library run:
 
 ```bash
-npm run scan
+cargo run --bin cli scan
 ```
 
 It is recommended to add the `npm run scan` to a cron job or trigger it manually once you've added/changed the media library.

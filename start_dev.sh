@@ -1,2 +1,1 @@
-npm i
-npm run dev
+cargo watch -x "run --bin server"

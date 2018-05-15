@@ -3,4 +3,4 @@
 cd "$(dirname "$0")"
 cd ..
 
-npm run scan
+./raspi/cli scan

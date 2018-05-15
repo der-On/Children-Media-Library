@@ -1,2 +1,1 @@
-npm i
-npm start
+cargo run --bin server

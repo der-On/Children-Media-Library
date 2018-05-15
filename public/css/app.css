@@ -129,11 +129,16 @@ html, body {
 .controls__album-track,
 .controls__playback {
   position: absolute;
-  left: calc(var(--cover-width) + (var(--grid-gutter) * 2))
+  left: calc(var(--cover-width) + (var(--grid-gutter) * 2));
 }
 .controls__album-track {
   padding-left: var(--grid-gutter);
   bottom: var(--grid-gutter);
+}
+.controls__duration {
+  position: absolute;
+  right: calc(var(--grid-gutter) * 2);
+  bottom: calc(var(--grid-gutter) * 3);
 }
 .controls__playback {
   top: calc(var(--grid-gutter) * 0.5);

@@ -2,6 +2,8 @@ function store() {
   const store = {};
   let state = {};
 
+  const redrawThrottled = _.throttle(m.redraw, 500);
+
   try {
     state = JSON.parse(window.localStorage['childrenAudioLibrary']);
   } catch (err) {
@@ -14,14 +16,14 @@ function store() {
       ? state[key] = value
       : _.assign(state, key);
     store.persist();
-    m.redraw();
+    redrawThrottled();
   };
 
   store.get = function (key, defaultValue) {
     return _.get(state, key, defaultValue);
   };
 
-  store.persist = _.debounce(function () {
+  store.persist = _.throttle(function () {
     window.localStorage.childrenAudioLibrary = JSON.stringify(state);
   }, 2000);
 

@@ -17,7 +17,7 @@ function audioView(vnode) {
 
   return m('audio.audio', {
     id: 'controls__playback-audio',
-    src: album ? `./library/${encodePath(album.media[playingTrack])}` : '',
+    src: album ? `./library/${album.media[playingTrack]}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
     onpause: vnode.state.handleAudioPause,
     onplay: vnode.state.handleAudioPlay,
@@ -89,6 +89,8 @@ function albumsAlbumView(vnode, album) {
 function controlsView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
   const playingTrack = vnode.state.store.get('playingTrack');
+  const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
+  const duration = vnode.state.store.get('playingDuration', 0) || 0;
 
   return m('section.controls',
     album ? [
@@ -98,6 +100,11 @@ function controlsView(vnode) {
         m('.controls__album-track', [
           `${album.artist} - ${album.title}`, m('br'),
           `${playingTrack + 1} / ${album.media.length}`
+        ]),
+        m('.controls__duration', [
+          formatTime(currentTime),
+          ' / ',
+          formatTime(duration)
         ]),
         playbackControlsView(vnode, album)
     ] : null
@@ -125,9 +132,9 @@ function playbackControlsView(vnode, album) {
 }
 
 function playbackControlsProgressView(vnode) {
-  const currentTime = vnode.state.store.get('playingCurrentTime', 0);
-  const duration = vnode.state.store.get('playingDuration', 0);
-  const progress = currentTime / duration;
+  const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
+  const duration = vnode.state.store.get('playingDuration', 0) || 0;
+  const progress = duration != 0 ? currentTime / duration : 0;
 
   return m('.controls__playback-progress', {
     id: 'controls__playback-progress'
@@ -145,7 +152,7 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   return m('figure.album__cover', _.assign({
-    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url('./library/${encodePath(album.cover)}');`,
+    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url('./library/${album.cover}');`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }
@@ -156,7 +163,7 @@ function fullscreenAlbumCoverView(vnode) {
 
   return album ? m('figure.album__cover.album__cover--fullscreen', {
     className: fullscreenAlbumId !== album.id ? 'is-hidden' : '',
-    style: `background-image: url('./library/${encodePath(album.cover)}')`,
+    style: `background-image: url('./library/${album.cover}')`,
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
   }) : null;
