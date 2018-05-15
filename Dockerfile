@@ -1,9 +1,7 @@
-FROM node:8.9
+FROM rust:1.23.0
 
-VOLUME ['/home/node/app']
+VOLUME ['/usr/src/myapp']
 
-User node
-
-WORKDIR /home/node/app
+WORKDIR /usr/src/myapp
 
 CMD ["sh", "./start.sh"]

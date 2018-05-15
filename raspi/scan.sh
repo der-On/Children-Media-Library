@@ -3,4 +3,4 @@
 cd "$(dirname "$0")"
 cd ..
 
-./raspi/scan
+./raspi/cli scan

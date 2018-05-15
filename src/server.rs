@@ -53,7 +53,7 @@ impl Service for MainService {
 }
 
 pub fn start(port: u16, library: String) {
-    let addr = format!("127.0.0.1:{}", port).parse().unwrap();
+    let addr = format!("0.0.0.0:{}", port).parse().unwrap();
     let server = Http::new().bind(&addr, move || Ok(MainService::new(library.clone()))).unwrap();
     println!("Server running on http://localhost:{}/", port);
 

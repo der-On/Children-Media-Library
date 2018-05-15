@@ -3,8 +3,8 @@ services:
   app:
     build: .
     volumes:
-      - ./:/home/node/app
-      - ${LIBRARY_PATH}:/home/node/Music
+      - ./:/usr/src/myapp
+      - ${LIBRARY_PATH}:/usr/src/myapp/Music
     ports:
       - "8000:8000"
     command: ["sh", "./start_dev.sh"]
