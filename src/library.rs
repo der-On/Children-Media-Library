@@ -1,5 +1,6 @@
 extern crate chrono;
 extern crate sha1;
+extern crate natord;
 
 use std::fs::File;
 use std::usize;
@@ -97,6 +98,8 @@ fn readdir(path: &Path) -> Vec<String> {
         }
     }
 
+    files.sort_by(|a, b| natord::compare(a.as_str(), b.as_str()));
+
     return files;
 }
 
@@ -119,6 +122,8 @@ fn readdir_recursive(path: &Path) -> Vec<String> {
             }
         }
     }
+
+    dirs.sort_by(|a, b| natord::compare(a.as_str(), b.as_str()));
 
     return dirs;
 }
