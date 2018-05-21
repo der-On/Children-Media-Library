@@ -49,6 +49,8 @@ It is recommended to have access to a last.fm and discogs developers account to 
 }
 ```
 
+See this [guide on getting bluetooth audio work](https://www.raspberrypi.org/magpi/bluetooth-audio-raspberry-pi-3/) on the Raspberry PI.
+
 ## Develop
 
 ```bash
