@@ -18,7 +18,21 @@ const app = {
           : vnode.state.store.get('playingTrack', 0),
         playing: true,
       });
-      vnode.state.audioElement.play();
+
+      const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
+      const playingTrack = vnode.state.store.get('playingTrack');
+      const trackUrl = `./playback/${album.media[playingTrack]}`;
+
+      // vnode.state.audioElement.play();
+      fetch(`${trackUrl}?action=play`)
+      .then(res => {
+        if (!res.ok) {
+          return Promise.reject(new Error('Unable to playback.'));
+        }
+
+        return res.json();
+      })
+      .catch(console.error.bind(console));
     };
 
     vnode.state.pause = function(albumId) {
@@ -140,7 +154,7 @@ const app = {
       document.body.removeEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
-      
+
       if (event.touches && event.touches.length > 0) {
         vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
       }

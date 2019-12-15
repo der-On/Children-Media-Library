@@ -1,11 +1,11 @@
 extern crate serde;
 extern crate serde_json;
-extern crate lib;
+extern crate children_audio_library;
 
 use std::fs::File;
 use std::env;
-use lib::config;
-use lib::library;
+use children_audio_library::config;
+use children_audio_library::library;
 use std::path::Path;
 
 fn scan_library(src: String) {

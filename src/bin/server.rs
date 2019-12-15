@@ -1,7 +1,7 @@
-extern crate lib;
+extern crate children_audio_library;
 
-use lib::config;
-use lib::server::start;
+use children_audio_library::config;
+use children_audio_library::server::start;
 
 fn main() {
     let conf = config::load("config.json".to_string()).unwrap();
