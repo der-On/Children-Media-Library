@@ -3,6 +3,14 @@ const app = {
   oninit: (vnode) => {
     vnode.state.store = store();
 
+    vnode.state.openAlbumGroup = function(albumGroupId) {
+      vnode.state.store.set('openedAlbumGroup', albumGroupId);
+    };
+
+    vnode.state.closeAlbumGroup = function() {
+      vnode.state.store.set('openedAlbumGroup', null);
+    };
+
     vnode.state.selectAlbum = function(albumId) {
       console.log('selectAlbum', albumId);
       vnode.state.store.set('selectedAlbum', albumId);
@@ -76,6 +84,10 @@ const app = {
     vnode.state.hideFullScreenAlbumCover = function() {
       console.log('hideFullScreenAlbumCover');
       vnode.state.store.set('fullscreenAlbum', null);
+    };
+
+    vnode.state.getAlbumGroupById = function(albumGroupId) {
+      return _.find(_.get(vnode.state, 'library.groups', []), ['id', albumGroupId]);
     };
 
     vnode.state.getAlbumById = function(albumId) {
@@ -176,7 +188,8 @@ const app = {
       return res.json();
     })
     .then(library => {
-      vnode.state.library = library;
+      // vnode.state.library = library;
+      vnode.state.library = groupLibrary(library);
       m.redraw();
     })
     .catch(console.error.bind(console));

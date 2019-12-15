@@ -76,7 +76,8 @@ html, body {
 .albums__album-icon.is-hidden {
   opacity: 0;
 }
-.album__cover {
+.album__cover,
+.album__group-cover {
   border: 1px solid var(--color-black);
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
@@ -90,6 +91,10 @@ html, body {
   background-repeat: no-repeat;
   cursor: pointer;
   transition: all 0.25s linear;
+}
+.album__group-cover {
+  background-position: top left, top right, bottom left, bottom right;
+  background-size: 50% 50%, 50% 50%, 50% 50%;
 }
 .albums__album.is-selected .album__cover {
   border: 1px solid var(--color-white);
