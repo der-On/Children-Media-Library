@@ -181,7 +181,7 @@ const app = {
 
     window.addEventListener('resize', m.redraw.bind(m));
 
-    fetch('./library.json')
+    fetch('./library.json?t=' + (new Date()).getTime())
     .then(res => {
       if (!res.ok) {
         return Promise.reject(new Error('Unable to load library.'));
