@@ -234,8 +234,6 @@ fn album_artist(path: &Path) -> String {
 }
 
 fn find_album_cover(path: &Path, _files: Vec<String>) -> String {
-    // TODO: find largest image file and use that
-    // or cover.jpg as a fallback
     let mut max_size = 0;
     let mut cover = path.join("cover.jpg")
         .as_path()
@@ -244,17 +242,13 @@ fn find_album_cover(path: &Path, _files: Vec<String>) -> String {
         .to_string();
 
     for file in _files.iter() {
-        let size = fs::metadata(path.join(file)).unwrap().len();
+        let size = fs::metadata(file).unwrap().len();
         if size > max_size {
             max_size = size;
-            cover = path.join(file)
-                .as_path()
-                .to_str()
-                .unwrap()
-                .to_string()
+            cover = file.to_string();
         }
     }
-
+    
     return cover;
 }
 
