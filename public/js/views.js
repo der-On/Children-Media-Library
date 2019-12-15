@@ -152,7 +152,7 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   return m('figure.album__cover', _.assign({
-    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url('./library/${album.cover}');`,
+    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url("${encodeURI('./library/' + album.cover)}");`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }

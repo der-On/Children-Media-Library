@@ -1,11 +1,10 @@
-FROM rust:1.38.0
+FROM rust:1.39.0
 
 VOLUME ['/usr/src/myapp']
 
 WORKDIR /usr/src/myapp
 
-RUN cargo install cargo-watch
-
 RUN apt-get update && apt-get install pulseaudio -y
+RUN cargo install cargo-watch
 
 CMD ["sh", "./start.sh"]
