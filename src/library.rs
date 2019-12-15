@@ -2,6 +2,7 @@ extern crate chrono;
 extern crate sha1;
 extern crate natord;
 
+use std::fs;
 use std::fs::File;
 use std::usize;
 use std::path::Path;
@@ -14,7 +15,7 @@ pub const MEDIA_EXTENSIONS: [&str; 3] = [
     "ogg"
 ];
 
-pub const IMAGE_EXTENSIONS: [&str; 2] = [
+pub const IMAGE_EXTENSIONS: [&str; 3] = [
     "jpg",
     "jpeg",
     "png"
@@ -155,6 +156,8 @@ fn scan_album(path: &Path) -> Album {
     let files: Vec<String> = readdir(path);
     let mut media_files: Vec<String> = files.clone();
     media_files.retain(|ref file| is_media_file(Path::new(file.clone().as_str())));
+    let mut cover_files: Vec<String> = files.clone();
+    cover_files.retain(|ref file| is_album_cover(Path::new(file.clone().as_str())));
 
     let album: Album = Album {
         id: sha1_from_path(path),
@@ -162,16 +165,14 @@ fn scan_album(path: &Path) -> Album {
         artist: album_artist(path),
         title: album_title(path),
         media: media_files,
-        cover: find_album_cover(path, files)
+        cover: find_album_cover(path, cover_files)
     };
 
     return album;
 }
 
 fn is_album_cover(path: &Path) -> bool {
-    let result = path.extension();
-
-    match result {
+    match path.extension() {
         Some(ext) => return IMAGE_EXTENSIONS.contains(
             &ext
             .to_str()
@@ -235,11 +236,24 @@ fn album_artist(path: &Path) -> String {
 fn find_album_cover(path: &Path, _files: Vec<String>) -> String {
     // TODO: find largest image file and use that
     // or cover.jpg as a fallback
-    let cover = path.join("cover.jpg")
+    let mut max_size = 0;
+    let mut cover = path.join("cover.jpg")
         .as_path()
         .to_str()
         .unwrap()
         .to_string();
+
+    for file in _files.iter() {
+        let size = fs::metadata(path.join(file)).unwrap().len();
+        if size > max_size {
+            max_size = size;
+            cover = path.join(file)
+                .as_path()
+                .to_str()
+                .unwrap()
+                .to_string()
+        }
+    }
 
     return cover;
 }
