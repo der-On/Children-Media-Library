@@ -140,7 +140,7 @@ const app = {
       document.body.removeEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
-      
+
       if (event.touches && event.touches.length > 0) {
         vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
       }
@@ -167,7 +167,7 @@ const app = {
 
     window.addEventListener('resize', m.redraw.bind(m));
 
-    fetch('./library.json')
+    fetch('./library.json?t=' + (new Date()).getTime())
     .then(res => {
       if (!res.ok) {
         return Promise.reject(new Error('Unable to load library.'));
