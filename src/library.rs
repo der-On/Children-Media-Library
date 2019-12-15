@@ -16,6 +16,7 @@ pub const MEDIA_EXTENSIONS: [&str; 3] = [
 
 pub const IMAGE_EXTENSIONS: [&str; 2] = [
     "jpg",
+    "jpeg",
     "png"
 ];
 
