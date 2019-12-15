@@ -71,13 +71,11 @@ function albumGroupView(vnode, albumGroup) {
 }
 
 function albumGroupCoverView(vnode, albumGroup, args = {}) {
-  console.log(albumGroup.title, albumGroup.albums.length);
   const backgroundImages = albumGroup.albums
   .slice(0, 4)
   .map(function (album) {
     return `url("${album.cover}")`;
   });
-  console.log(backgroundImages);
   return m('figure.album__group-cover', _.assign({
     style: `background-color: ${albumColor(albumGroup, 50, 60)}; background-image: ${backgroundImages.join(', ')};`,
     title: `${albumGroup.title}`
