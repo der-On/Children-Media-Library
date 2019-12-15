@@ -32,6 +32,23 @@ html, body {
   color: var(--color-white);
   transition: all 0.25s linear;
 }
+.main:after {
+  position: absolute;
+  content: '';
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000000;
+  opacity: 0;
+  transition: opacity 0.25s linear;
+  pointer-events: none;
+}
+.main.has-screen-saver:after {
+  pointer-events: auto;
+  opacity: 1;
+}
 .audio {
   display: none;
 }

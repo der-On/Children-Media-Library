@@ -1,4 +1,6 @@
 function appView(vnode) {
+  const screenSaverIsActive = vnode.state.screenSaverIsActive;
+
   const albumGroup = vnode.state.getAlbumGroupById(vnode.state.store.get('openedAlbumGroup'));
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
   let color = null;
@@ -8,6 +10,12 @@ function appView(vnode) {
     color = albumColor(album);
   }
   return m('main.main', {
+    class: screenSaverIsActive ? 'has-screen-saver' : null,
+    onmousedown: vnode.state.handleUserInput,
+    onmousemove: vnode.state.handleUserInput,
+    onclick: vnode.state.handleUserInput,
+    onkeydown: vnode.state.handleUserInput,
+    onmousewheel: vnode.state.handleUserInput,
     style: color ? `background-color: ${color};` : null
   }, [
     audioView(vnode),

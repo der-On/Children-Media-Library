@@ -1,7 +1,35 @@
+const idleDelay = 5 * 60 * 1000; // 5 min
+
 const app = {
   view: appView,
   oninit: (vnode) => {
     vnode.state.store = store();
+    vnode.state.screenSaverIsActive = false;
+    vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+
+    vnode.state.handleUserInput = function (event) {
+      if (vnode.state.screenSaverIsActive) {
+        event.stopPropagation();
+        event.preventDefault();
+        vnode.state.stopScreenSaver();
+        vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+        return false;
+      } else {
+        clearTimeout(vnode.state.idleTimeout);
+        vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+      }
+    };
+
+    vnode.state.startScreenSaver = function () {
+      console.log('start screen saver');
+      vnode.state.screenSaverIsActive = true;
+      m.redraw();
+    };
+
+    vnode.state.stopScreenSaver = function () {
+      console.log('stop screen saver');
+      vnode.state.screenSaverIsActive = false;
+    };
 
     vnode.state.openAlbumGroup = function(albumGroupId) {
       vnode.state.store.set('openedAlbumGroup', albumGroupId);
