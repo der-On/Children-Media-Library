@@ -1,11 +1,20 @@
 function appView(vnode) {
+  const albumGroup = vnode.state.getAlbumGroupById(vnode.state.store.get('openedAlbumGroup'));
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
-
+  let color = null;
+  if (albumGroup) {
+    color = albumColor(albumGroup);
+  } else if (album) {
+    color = albumColor(album);
+  }
   return m('main.main', {
-    style: album ? `background-color: ${albumColor(album)};` : null
+    style: color ? `background-color: ${color};` : null
   }, [
     audioView(vnode),
-    albumsView(vnode),
+    // albumsView(vnode),
+    albumGroup
+    ? albumsView(vnode, albumGroup)
+    : albumGroupsView(vnode),
     controlsView(vnode),
     fullscreenAlbumCoverView(vnode)
   ]);
@@ -25,8 +34,80 @@ function audioView(vnode) {
   });
 }
 
-function albumsView(vnode) {
-  const albums = _.get(vnode.state, 'library.albums', []);
+function albumGroupsView(vnode) {
+  const albumGroups = _.get(vnode.state, 'library.groups', []);
+  const groups = [];
+  const coversWidth = Math.floor(window.innerWidth / (COVER_WIDTH + GRID_GUTTER));
+  const coversHeight = Math.floor((window.innerHeight - CONTROLS_HEIGHT) / (COVER_HEIGHT + GRID_GUTTER));
+  const groupSize = (coversWidth * coversHeight);
+  const numGroups = Math.ceil(albumGroups.length / groupSize);
+  const groupWidth = coversWidth * (COVER_WIDTH + GRID_GUTTER);
+
+  for(let groupNum = 0; groupNum < numGroups; groupNum++) {
+    groups.push(albumGroups.slice(groupNum * groupSize, (groupNum * groupSize) + groupSize));
+  }
+  return m('section.albums', groups.map(_.partial(albumGroupsGroupView, vnode, groupWidth)));
+}
+
+function albumGroupsGroupView(vnode, width, albumGroups, index) {
+  return m('.albums__group', {
+    key: index,
+    style: `width: ${width}px;`,
+  }, albumGroups.map(_.partial(albumGroupView, vnode)));
+}
+
+function albumGroupView(vnode, albumGroup) {
+  const className = [];
+  const onclick = _.partial(vnode.state.openAlbumGroup, albumGroup.id);
+
+  return m('.albums__album', {
+    className: className.join(' '),
+    key: albumGroup.src
+  }, [
+    albumGroupCoverView(vnode, albumGroup, {
+      onclick
+    })
+  ]);
+}
+
+function albumGroupCoverView(vnode, albumGroup, args = {}) {
+  console.log(albumGroup.title, albumGroup.albums.length);
+  const backgroundImages = albumGroup.albums
+  .slice(0, 4)
+  .map(function (album) {
+    return `url("${album.cover}")`;
+  });
+  console.log(backgroundImages);
+  return m('figure.album__group-cover', _.assign({
+    style: `background-color: ${albumColor(albumGroup, 50, 60)}; background-image: ${backgroundImages.join(', ')};`,
+    title: `${albumGroup.title}`
+  }, args));
+}
+
+function fullscreenAlbumCoverView(vnode) {
+  const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
+  const fullscreenAlbumId = vnode.state.store.get('fullscreenAlbum');
+
+  return album ? m('figure.album__cover.album__cover--fullscreen', {
+    className: fullscreenAlbumId !== album.id ? 'is-hidden' : '',
+    style: `background-image: url("${album.cover}")`,
+    onclick: vnode.state.hideFullScreenAlbumCover,
+    title: `${album.artist} - ${album.title}`
+  }) : null;
+}
+
+function closeAlbumGroupAlbum(vnode) {
+  return {
+    title: null,
+    onclick: vnode.state.closeAlbumGroup,
+    cover: './images/back_icon.png'
+  };
+}
+
+function albumsView(vnode, albumGroup = null) {
+  const albums = albumGroup
+    ? [closeAlbumGroupAlbum(vnode)].concat(albumGroup.albums)
+    : _.get(vnode.state, 'library.albums', []);
   const groups = [];
   const coversWidth = Math.floor(window.innerWidth / (COVER_WIDTH + GRID_GUTTER));
   const coversHeight = Math.floor((window.innerHeight - CONTROLS_HEIGHT) / (COVER_HEIGHT + GRID_GUTTER));
@@ -56,7 +137,10 @@ function albumsAlbumView(vnode, album) {
   const className = [];
   let onclick;
 
-  if (!isPlaying && isSelected) {
+  if (album.onclick) {
+    onclick = album.onclick;
+  }
+  else if (!isPlaying && isSelected) {
     onclick = _.partial(vnode.state.play, album.id);
   } else if (isPlaying && !isSelected) {
     onclick = _.partial(vnode.state.selectAlbum, album.id);
@@ -151,8 +235,9 @@ function playbackControlsProgressView(vnode) {
 }
 
 function albumCoverView(vnode, album, args = {}) {
+  const backgroundImage = `url("${album.cover}")`;
   return m('figure.album__cover', _.assign({
-    style: `background-color: ${albumColor(album, 50, 60)}; background-image: url("${encodeURI('./library/' + album.cover)}");`,
+    style: `background-color: ${albumColor(album, 50, 60)}; background-image: ${backgroundImage};`,
     title: `${album.artist} - ${album.title}`
   }, args));
 }
@@ -163,7 +248,7 @@ function fullscreenAlbumCoverView(vnode) {
 
   return album ? m('figure.album__cover.album__cover--fullscreen', {
     className: fullscreenAlbumId !== album.id ? 'is-hidden' : '',
-    style: `background-image: url('./library/${album.cover}')`,
+    style: `background-image: url("${album.cover}")`,
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
   }) : null;

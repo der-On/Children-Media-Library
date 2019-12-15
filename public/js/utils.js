@@ -34,3 +34,30 @@ function hashCode(str) {
   }
   return hash;
 }
+
+function groupLibrary(library) {
+  library.groups = [];
+  var groupsByPath = {};
+  library.albums.forEach(function (album) {
+    album.cover = './library/' + encodeURI(album.cover);
+    var pathParts = album.src.split('/');
+
+    if (pathParts.length > 1) {
+      var dirPath = pathParts.slice(0, -1).join('/');
+      if (!groupsByPath[dirPath]) {
+        var group = {
+          id: dirPath,
+          title: dirPath,
+          src: dirPath,
+          albums: [album]
+        };
+        library.groups.push(group);
+        groupsByPath[dirPath] = group;
+      } else {
+        groupsByPath[dirPath].albums.push(album);
+      }
+    }
+  });
+
+  return library;
+}
