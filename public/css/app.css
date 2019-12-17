@@ -44,6 +44,7 @@ html, body {
   opacity: 0;
   transition: opacity 0.25s linear;
   pointer-events: none;
+  z-index: 100;
 }
 .main.has-screen-saver:after {
   pointer-events: auto;
