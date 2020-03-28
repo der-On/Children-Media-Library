@@ -33,15 +33,18 @@ const app = {
 
     vnode.state.openAlbumGroup = function(albumGroupId) {
       vnode.state.store.set('openedAlbumGroup', albumGroupId);
+      lazyLoadDelayed();
     };
 
     vnode.state.closeAlbumGroup = function() {
       vnode.state.store.set('openedAlbumGroup', null);
+      lazyLoadDelayed();
     };
 
     vnode.state.selectAlbum = function(albumId) {
       console.log('selectAlbum', albumId);
       vnode.state.store.set('selectedAlbum', albumId);
+      lazyLoadDelayed();
     };
 
     vnode.state.play = function(albumId) {
@@ -206,6 +209,7 @@ const app = {
     };
 
     window.addEventListener('resize', m.redraw.bind(m));
+    window.addEventListener('resize', lazyLoad);
 
     fetch('./library.json?t=' + (new Date()).getTime())
     .then(res => {
@@ -219,6 +223,7 @@ const app = {
       // vnode.state.library = library;
       vnode.state.library = groupLibrary(library);
       m.redraw();
+      lazyLoad();
     })
     .catch(console.error.bind(console));
   },
@@ -227,6 +232,8 @@ const app = {
     const playing = vnode.state.store.get('playing');
     const currentTime = vnode.state.store.get('playingCurrentTime');
     vnode.state.audioElement = document.getElementById('controls__playback-audio');
+
+    document.querySelector('.albums').addEventListener('scroll', lazyLoad);
 
     // restore previous play state
     if (playing) {

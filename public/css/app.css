@@ -223,3 +223,7 @@ html, body {
   display: block;
   background: transparent;
 }
+
+.lazy-load[data-loaded="false"] {
+  background-image: none !important;
+}

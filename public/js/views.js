@@ -84,8 +84,9 @@ function albumGroupCoverView(vnode, albumGroup, args = {}) {
   .map(function (album) {
     return `url("${album.cover}")`;
   });
-  return m('figure.album__group-cover', _.assign({
+  return m('figure.album__group-cover.lazy-load', _.assign({
     style: `background-color: ${albumColor(albumGroup, 50, 60)}; background-image: ${backgroundImages.join(', ')};`,
+    'data-loaded': 'false',
     title: `${albumGroup.title}`
   }, args));
 }
@@ -242,8 +243,9 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   const backgroundImage = `url("${album.cover}")`;
-  return m('figure.album__cover', _.assign({
+  return m('figure.album__cover.lazy-load', _.assign({
     style: `background-color: ${albumColor(album, 50, 60)}; background-image: ${backgroundImage};`,
+    'data-loaded': 'false',
     title: `${album.artist} - ${album.title}`
   }, args));
 }
