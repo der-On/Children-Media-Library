@@ -14,3 +14,10 @@ X-GNOME-Autostart-enabled=true
 Name[en_US]=AutoChildrenAudioLibrary
 Name=AutoChildrenAudioLibrary
 Comment=Start Children Audio Library when GNOME starts" > ~/.config/autostart/autoChildrenAudioLibrary.desktop
+
+echo "Disabling screen screensaver and screenblanking ..."
+sudo echo "@xset s noblank" >> /etc/xdg/lxsession/LXDE-pi/autostart
+sudo echo "@xset s off" >> /etc/xdg/lxsession/LXDE-pi/autostart
+sudo echo "@xset -dpms" >> /etc/xdg/lxsession/LXDE-pi/autostart
+
+echo "Setup complete."
