@@ -47,13 +47,25 @@ async fn request_handler(
             let path = req.uri().path();
 
             if path == "/shutdown" {
-                let output = cmd_lib::output!("shutdown -P now").unwrap();
+                let output = cmd_lib::run_cmd("sh raspi/shutdown.sh");
 
-                Ok(Response::builder()
-                    .status(StatusCode::OK)
-                    .body(output.into())
-                    .unwrap()
-                )
+                match output {
+                    Ok(_) => {
+                        Ok(Response::builder()
+                            .status(StatusCode::OK)
+                            .body("System shutdown initialized.".into())
+                            .unwrap()
+                        )
+                    },
+                    error => {
+                        eprintln!("Error during system shutdown: {:?}", error);
+                        Ok(Response::builder()
+                            .status(StatusCode::INTERNAL_SERVER_ERROR)
+                            .body("Error during system shutdown.".into())
+                            .unwrap()
+                        )
+                    }
+                }
             } else {
                 Ok(Response::builder()
                     .status(StatusCode::NOT_FOUND)
