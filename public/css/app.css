@@ -32,22 +32,52 @@ html, body {
   color: var(--color-white);
   transition: all 0.25s linear;
 }
-.screen-saver {
+.screen-saver,
+.header {
   position: absolute;
   display: block;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #000000;
   opacity: 0;
   transition: opacity 0.25s linear;
   pointer-events: none;
+}
+.header {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+.header__nav {
+  background-color: #ddd;
+  color: #000;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  padding: 1rem;
+  transition: transform 0.25s ease-in-out;
+  transform: translate(0, -100%);
+}
+.header__nav-item {
+  display: inline-block;
+  margin: 1rem;
+  text-align: center;
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+}
+.screen-saver {
+  background-color: #000000;
   z-index: 100;
 }
 .main.has-screen-saver .screen-saver {
   pointer-events: auto;
   opacity: 1;
+}
+.header.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(0, 0);
+}
+.header.is-visible .header__nav {
+  transform: translate(0, 0);
 }
 .audio {
   display: none;

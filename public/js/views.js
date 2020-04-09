@@ -1,5 +1,6 @@
 function appView(vnode) {
   const screenSaverIsActive = vnode.state.screenSaverIsActive;
+  const isShuttingDown = vnode.state.isShuttingDown;
 
   const albumGroup = vnode.state.getAlbumGroupById(vnode.state.store.get('openedAlbumGroup'));
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
@@ -10,9 +11,10 @@ function appView(vnode) {
     color = albumColor(album);
   }
   return m('main.main', {
-    class: screenSaverIsActive ? 'has-screen-saver' : '',
-    onmousedown: vnode.state.handleUserInput,
-    onmousemove: vnode.state.handleUserInput,
+    class: screenSaverIsActive || isShuttingDown ? 'has-screen-saver' : '',
+    onmousedown: vnode.state.handleMouseDown,
+    onmousemove: vnode.state.handleMouseMove,
+    ontouchstart: vnode.state.handleTouchStart,
     onclick: vnode.state.handleUserInput,
     onkeydown: vnode.state.handleUserInput,
     onmousewheel: vnode.state.handleUserInput,
@@ -25,6 +27,7 @@ function appView(vnode) {
     : albumGroupsView(vnode),
     controlsView(vnode),
     fullscreenAlbumCoverView(vnode),
+    headerView(vnode),
     screenSaverView(vnode)
   ]);
 }
@@ -263,8 +266,34 @@ function fullscreenAlbumCoverView(vnode) {
   }) : null;
 }
 
+function headerView(vnode) {
+  return m('header.header', {
+    className: vnode.state.headerIsVisible ? 'is-visible' : ''
+  }, [
+    m('nav.header__nav', [
+      {
+        id: 'shutdown',
+        icon: '/images/shutdown_icon.png',
+        label: 'shutdown',
+        action: vnode.state.shutdown
+      }
+    ].map(_.partial(headerNavItemView, vnode)))
+  ]);
+}
+
+function headerNavItemView(vnode, item) {
+  return m('button.header__nav-item', {
+    onclick: _.partial(vnode.state.handleHeaderNavItemClick, item)
+  }, [
+    m('img.header__nav-item-icon', {
+      src: item.icon
+    }),
+    m('.header__nav-item-label', item.label || '')
+  ])
+}
+
 function screenSaverView(vnode) {
   return m('.screen-saver', {
-    onclick: vnode.state.resetScreenSaver
+    onclick: vnode.state.handleScreenSaverClick
   });
 }

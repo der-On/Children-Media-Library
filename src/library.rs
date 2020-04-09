@@ -142,7 +142,7 @@ fn is_dir(path: &Path) -> bool {
     path.is_dir()
 }
 
-fn file_size(file: &File) {
+fn file_size(_file: &File) {
 
 }
 
@@ -248,7 +248,7 @@ fn find_album_cover(path: &Path, _files: Vec<String>) -> String {
             cover = file.to_string();
         }
     }
-    
+
     return cover;
 }
 

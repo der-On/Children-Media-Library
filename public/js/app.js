@@ -1,4 +1,5 @@
 const idleDelay = 5 * 60 * 1000; // 5 min
+const headerDragDownDistance = 0.5;
 
 const app = {
   view: appView,
@@ -8,11 +9,99 @@ const app = {
     vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
     vnode.state.touches = {};
 
+    vnode.state.handleMouseDown = function (event) {
+      vnode.state.handleUserInput(event);
+    };
+
+    vnode.state.handleMouseMove = function (event) {
+      vnode.state.handleUserInput(event);
+    };
+
+    vnode.state.handleTouchStart = function (event) {
+      vnode.state.touches = {};
+      const touch = event.changedTouches[0];
+      vnode.state.touches[touch.identifier] = {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      };
+
+      document.addEventListener('touchmove', vnode.state.handleTouchMove);
+      document.addEventListener('touchend', vnode.state.handleTouchEnd);
+      document.addEventListener('touchcancel', vnode.state.handleTouchEnd);
+    };
+
+    vnode.state.handleTouchMove = function (event) {
+      const touch = event.changedTouches[0];
+      const diffY = touch.clientY - vnode.state.touches[touch.identifier].clientY;
+
+      vnode.state.handleHeaderDrag(diffY);
+    };
+
+    vnode.state.handleTouchEnd = function (event) {
+      vnode.state.touches = {};
+      document.removeEventListener('touchmove', vnode.state.handleTouchMove);
+      document.removeEventListener('touchend', vnode.state.handleTouchEnd);
+      document.removeEventListener('touchcancel', vnode.state.handleTouchEnd);
+    };
+
+    vnode.state.handleHeaderDrag = function (y) {
+      const windowHeight = window.innerHeight;
+      const pos = y / windowHeight;
+
+      if (vnode.state.headerIsVisible && pos < 0) {
+        if (-pos >= headerDragDownDistance) {
+          vnode.state.headerIsVisible = false;
+          m.redraw();
+        }
+      } else if (pos >= headerDragDownDistance) {
+        vnode.state.headerIsVisible = true;
+        m.redraw();
+      }
+    };
+
     vnode.state.handleUserInput = function (event) {
       if (!vnode.state.screenSaverIsActive) {
         clearTimeout(vnode.state.idleTimeout);
         vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
       }
+    };
+
+    vnode.state.handleHeaderNavItemClick = function (item) {
+      // TODO: require 2s press to activate
+      if (item && item.action) {
+        item.action();
+      }
+    };
+
+    vnode.handleScreenSaverClick = function () {
+      if (vnode.state.isShuttingDown) {
+        return false;
+      }
+
+      vnode.state.resetScreenSaver();
+    };
+
+    vnode.state.shutdown = function () {
+      vnode.state.isShuttingDown = true;
+      fetch('/shutdown', {
+        method: 'POST'
+      })
+      .then((res) => {
+        if (res.ok) {
+          return res.text();
+        } else {
+          throw new Error('Error during shutdown');
+        }
+      })
+      .then((text) => {
+        vnode.state.isShuttingDown = true;
+        m.redraw();
+        console.log(text);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+      m.redraw();
     };
 
     vnode.state.startScreenSaver = function () {
