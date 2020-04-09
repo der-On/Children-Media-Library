@@ -324,8 +324,7 @@ const app = {
     };
 
     vnode.state.handleProgressHandleMouseMove = function (event) {
-      const touch = vnode.state.touches[0];
-      const diffX = event.clientX - touch.clientX;
+      const diffX = event.clientX - vnode.state.touches[0].clientX;
       const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
 
       vnode.state.draggingCurrentTime = time;
@@ -340,8 +339,7 @@ const app = {
     };
 
     vnode.state.handleProgressHandleMouseUp = function (event) {
-      const touch = event.changedTouches[0];
-      const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
+      const diffX = event.clientX - vnode.state.touches[0].clientX;
       const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
 
       vnode.state.audioElement.currentTime = time;
