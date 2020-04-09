@@ -46,6 +46,7 @@ html, body {
 }
 .header {
   background-color: rgba(0, 0, 0, 0.75);
+  z-index: 99;
 }
 .header__nav {
   background-color: #ddd;
@@ -54,6 +55,7 @@ html, body {
   padding: 1rem;
   transition: transform 0.25s ease-in-out;
   transform: translate(0, -100%);
+  border-radius: 0 0 5px 5px;
 }
 .header__nav-item {
   display: inline-block;
