@@ -1,8 +1,4 @@
 {
-  "library": "~/Music",
-  "port": 8000,
-  "lastFmApiKey": "secret",
-  "discogsConsumerKey": "secret",
-  "discogsConsumerSecret": "secret",
-  "bluetoothSpeaker": "your bluetoothSpeaker ID"
+  "library": "/media/pi",
+  "port": 8000
 }

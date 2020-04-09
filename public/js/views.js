@@ -13,7 +13,7 @@ function appView(vnode) {
   return m('main.main', {
     class: screenSaverIsActive || isShuttingDown ? 'has-screen-saver' : '',
     onmousedown: vnode.state.handleMouseDown,
-    onmousemove: vnode.state.handleMouseMove,
+    onmousemove: vnode.state.handleUserInput,
     ontouchstart: vnode.state.handleTouchStart,
     onclick: vnode.state.handleUserInput,
     onkeydown: vnode.state.handleUserInput,
@@ -279,14 +279,28 @@ function headerView(vnode) {
         icon: '/images/shutdown_icon.png',
         label: 'shutdown',
         action: vnode.state.shutdown
+      },
+      {
+        id: 'reload',
+        icon: '/images/reload_icon.png',
+        label: 'reload',
+        action: vnode.state.reload
       }
     ].map(_.partial(headerNavItemView, vnode)))
   ]);
 }
 
 function headerNavItemView(vnode, item) {
+  const pressHandler = _.partial(vnode.state.handleHeaderNavItemPress, item);
+  const releaseHandler = _.partial(vnode.state.handleHeaderNavItemRelease, item);
+  const cancelHandler = _.partial(vnode.state.handleHeaderNavItemCancel, item);
+
   return m('button.header__nav-item', {
-    onclick: _.partial(vnode.state.handleHeaderNavItemClick, item)
+    onmousedown: pressHandler,
+    ontouchstart: pressHandler,
+    onmouseup: releaseHandler,
+    ontouchend: releaseHandler,
+    ontouchcancel: cancelHandler
   }, [
     m('img.header__nav-item-icon', {
       src: item.icon

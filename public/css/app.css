@@ -57,7 +57,7 @@ html, body {
 }
 .header__nav-item {
   display: inline-block;
-  margin: 1rem;
+  margin: 2rem;
   text-align: center;
   border: none;
   background: transparent;

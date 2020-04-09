@@ -1,5 +1,6 @@
 const idleDelay = 5 * 60 * 1000; // 5 min
-const headerDragDownDistance = 0.5;
+const headerDragDownDistance = 0.5; // half screen height
+const headerNavItemPressDuration = 3000; // 3s
 
 const app = {
   view: appView,
@@ -12,13 +13,36 @@ const app = {
 
     vnode.state.handleMouseDown = function (event) {
       vnode.state.handleUserInput(event);
+
+      vnode.state.touches = {};
+      vnode.state.touches[0] = {
+        clientX: event.clientX,
+        clientY: event.clientY
+      };
+
+      document.addEventListener('mousemove', vnode.state.handleMouseMove);
+      document.addEventListener('mouseup', vnode.state.handleMouseUp);
     };
 
     vnode.state.handleMouseMove = function (event) {
+      event.preventDefault();
       vnode.state.handleUserInput(event);
+      const diffY = event.clientY - vnode.state.touches[0].clientY;
+
+      vnode.state.handleHeaderDrag(diffY);
+    };
+
+    vnode.state.handleMouseUp = function (event) {
+      vnode.state.handleUserInput(event);
+
+      vnode.state.touches = {};
+      document.removeEventListener('mousemove', vnode.state.handleMouseMove);
+      document.removeEventListener('mouseup', vnode.state.handleMouseUp);
     };
 
     vnode.state.handleTouchStart = function (event) {
+      vnode.state.handleUserInput(event);
+
       vnode.state.touches = {};
       const touch = event.changedTouches[0];
       vnode.state.touches[touch.identifier] = {
@@ -32,6 +56,8 @@ const app = {
     };
 
     vnode.state.handleTouchMove = function (event) {
+      vnode.state.handleUserInput(event);
+
       const touch = event.changedTouches[0];
       const diffY = touch.clientY - vnode.state.touches[touch.identifier].clientY;
 
@@ -39,6 +65,8 @@ const app = {
     };
 
     vnode.state.handleTouchEnd = function (event) {
+      vnode.state.handleUserInput(event);
+
       vnode.state.touches = {};
       document.removeEventListener('touchmove', vnode.state.handleTouchMove);
       document.removeEventListener('touchend', vnode.state.handleTouchEnd);
@@ -67,11 +95,34 @@ const app = {
       }
     };
 
-    vnode.state.handleHeaderNavItemClick = function (item) {
-      // TODO: require 2s press to activate
-      if (item && item.action) {
+    vnode.state.handleHeaderNavItemPress = function (item, event) {
+      event.preventDefault();
+      vnode.state.pressedHeaderNavItem = {
+        id: item.id,
+        pressedAt: (new Date()).getTime()
+      };
+    };
+
+    vnode.state.handleHeaderNavItemRelease = function (item, event) {
+      event.preventDefault();
+      const now = (new Date()).getTime();
+      if (
+        _.get(vnode.state.pressedHeaderNavItem, 'id') === item.id &&
+        now - vnode.state.pressedHeaderNavItem.pressedAt >= headerNavItemPressDuration
+      ) {
         item.action();
       }
+
+      vnode.state.pressedHeaderNavItem = null;
+
+      return false;
+    };
+
+    vnode.state.handleHeaderNavItemCancel = function (item, event) {
+      event.preventDefault();
+      vnode.state.pressedHeaderNavItem = null;
+
+      return false;
     };
 
     vnode.handleScreenSaverClick = function () {
@@ -83,7 +134,6 @@ const app = {
     };
 
     vnode.state.shutdown = function () {
-      vnode.state.isShuttingDown = true;
       fetch('/shutdown', {
         method: 'POST'
       })
@@ -97,12 +147,15 @@ const app = {
       .then((text) => {
         vnode.state.isShuttingDown = true;
         m.redraw();
-        console.log(text);
       })
       .catch((err) => {
         console.error(err);
       });
       m.redraw();
+    };
+
+    vnode.state.reload = function () {
+      window.location.reload();
     };
 
     vnode.state.startScreenSaver = function () {

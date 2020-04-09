@@ -13,39 +13,24 @@ Web based audio library for children. Made for the Raspberry Pi 7" Touchscreen.
 - [x] make it work on the included Chromium from Raspbian in kiosk mode
 - [x] make it startup on boot and prevent escaping (escaping should only be possible with a keyboard)
 - [x] make it read directories from a list of library folders (including external storages)
-- [x] make it automaticly download cover art from online sources or use existing cover art images
-- [ ] make it optionally shutdown system automaticly after given time of inactivity
-- [x] make it work completely offline
-- [x] make it automaticly (re-)connect to a bluetooth speaker
+- [x] make it automaticly use existing cover art images
+- [x] make it shutdown system after user action
+- [x] make it work completly offline
 - [x] provide a CLI to rescan library folder(s) and stop/start/maintain it
 
 ## Configuration
 
 Copy `config.example.json` to `config.json` and adjust to your needs.
-It is recommended to have access to a last.fm and discogs developers account to download missing cover art.
 
 ```javascript
 {
   // list of paths to audio libraries
   "library": [
-    "~/Music"
+    "/media/pi"
   ],
 
   // port at which the server should run
-  "port": 8000,
-
-  // your last fm API Key
-  "lastFmApiKey": "secret",
-
-  // your discogs consumer key
-  "discogsConsumerKey": "secret",
-
-  // your discogs consumer secret
-  "discogsConsumerSecret": "secret",
-
-  // macID of your bluetooth speaker if any
-  // set to null if you do not want to use a bluetooth speaker
-  "bluetoothSpeaker": "your bluetoothSpeaker ID"
+  "port": 8000
 }
 ```
 
@@ -85,7 +70,7 @@ To rescan the media library run:
 cargo run --bin cli scan
 ```
 
-It is recommended to add the `npm run scan` to a cron job or trigger it manually once you've added/changed the media library.
+It is recommended to add the `cargo run --bin cli scan` to a cron job or trigger it manually once you've added/changed the media library.
 
 ## On the Raspberry Pi
 
@@ -99,3 +84,8 @@ sudo reboot
 ```
 
 This will install all dependencies and make the audio library start on boot in kiosk mode.
+
+
+## Credits
+
+Icons by [fontawesome](https://fontawesome.com) under the [Font Awesome License](https://fontawesome.com/license#license).
