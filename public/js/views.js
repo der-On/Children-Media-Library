@@ -10,7 +10,7 @@ function appView(vnode) {
     color = albumColor(album);
   }
   return m('main.main', {
-    class: screenSaverIsActive ? 'has-screen-saver' : null,
+    class: screenSaverIsActive ? 'has-screen-saver' : '',
     onmousedown: vnode.state.handleUserInput,
     onmousemove: vnode.state.handleUserInput,
     onclick: vnode.state.handleUserInput,
@@ -24,7 +24,8 @@ function appView(vnode) {
     ? albumsView(vnode, albumGroup)
     : albumGroupsView(vnode),
     controlsView(vnode),
-    fullscreenAlbumCoverView(vnode)
+    fullscreenAlbumCoverView(vnode),
+    screenSaverView(vnode)
   ]);
 }
 
@@ -260,4 +261,10 @@ function fullscreenAlbumCoverView(vnode) {
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
   }) : null;
+}
+
+function screenSaverView(vnode) {
+  return m('.screen-saver', {
+    onclick: vnode.state.resetScreenSaver
+  });
 }

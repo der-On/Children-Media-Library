@@ -32,9 +32,8 @@ html, body {
   color: var(--color-white);
   transition: all 0.25s linear;
 }
-.main:after {
+.screen-saver {
   position: absolute;
-  content: '';
   display: block;
   top: 0;
   left: 0;
@@ -46,7 +45,7 @@ html, body {
   pointer-events: none;
   z-index: 100;
 }
-.main.has-screen-saver:after {
+.main.has-screen-saver .screen-saver {
   pointer-events: auto;
   opacity: 1;
 }

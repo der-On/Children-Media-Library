@@ -8,13 +8,7 @@ const app = {
     vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
 
     vnode.state.handleUserInput = function (event) {
-      if (vnode.state.screenSaverIsActive) {
-        event.stopPropagation();
-        event.preventDefault();
-        vnode.state.stopScreenSaver();
-        vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
-        return false;
-      } else {
+      if (!vnode.state.screenSaverIsActive) {
         clearTimeout(vnode.state.idleTimeout);
         vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
       }
@@ -29,6 +23,11 @@ const app = {
     vnode.state.stopScreenSaver = function () {
       console.log('stop screen saver');
       vnode.state.screenSaverIsActive = false;
+    };
+
+    vnode.state.resetScreenSaver = function () {
+      vnode.state.stopScreenSaver();
+      vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
     };
 
     vnode.state.openAlbumGroup = function(albumGroupId) {
@@ -170,7 +169,7 @@ const app = {
     };
 
     vnode.state.handleProgressHandleTouchMove = function (event) {
-      vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
+      vnode.state.updateCurrentTimeFromProgressDrag(event.changedTouches[0].clientX);
     };
 
     vnode.state.handleProgressHandleMouseUp = function (event) {
@@ -185,7 +184,7 @@ const app = {
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
 
       if (event.touches && event.touches.length > 0) {
-        vnode.state.updateCurrentTimeFromProgressDrag(event.touches[0].clientX);
+        vnode.state.updateCurrentTimeFromProgressDrag(event.changedTouches[0].clientX);
       }
     };
 
