@@ -8,6 +8,7 @@ const app = {
     vnode.state.screenSaverIsActive = false;
     vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
     vnode.state.touches = {};
+    vnode.state.draggingCurrentTime = -1;
 
     vnode.state.handleMouseDown = function (event) {
       vnode.state.handleUserInput(event);
@@ -272,34 +273,41 @@ const app = {
     vnode.state.handleProgressHandleMouseMove = function (event) {
       const touch = vnode.state.touches[0];
       const diffX = event.clientX - touch.clientX;
-      vnode.state.updateCurrentTimeFromProgressDrag(diffX);
+      const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
+
+      vnode.state.draggingCurrentTime = time;
     };
 
     vnode.state.handleProgressHandleTouchMove = function (event) {
       const touch = event.changedTouches[0];
       const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
+      const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
 
-      vnode.state.updateCurrentTimeFromProgressDrag(diffX);
+      vnode.state.draggingCurrentTime = time;
     };
 
     vnode.state.handleProgressHandleMouseUp = function (event) {
       const touch = event.changedTouches[0];
       const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
+      const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
+
+      vnode.state.audioElement.currentTime = time;
+      vnode.state.draggingCurrentTime = -1;
+      vnode.state.touches = {};
 
       document.body.removeEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
       document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
-      vnode.state.updateCurrentTimeFromProgressDrag(diffX);
-
-      vnode.state.touches = {};
     };
 
     vnode.state.handleProgressHandleTouchEnd = function (event) {
       if (event.changedTouches && event.changedTouches.length > 0) {
         const touch = event.changedTouches[0];
         const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
-        vnode.state.updateCurrentTimeFromProgressDrag(diffX);
+        const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
+        vnode.state.draggingCurrentTime = time;
       }
-
+      vnode.state.audioElement.currentTime = vnode.state.store.get('draggingCurrentTime', vnode.state.audioElement.currentTime);
+      vnode.state.draggingCurrentTime = -1;
       vnode.state.touches = {};
 
       document.body.removeEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
@@ -307,7 +315,7 @@ const app = {
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
     };
 
-    vnode.state.updateCurrentTimeFromProgressDrag = function (x) {
+    vnode.state.getCurrentTimeFromProgressDrag = function (x) {
       const progressElement = document.getElementById('controls__playback-progress');
       const progressBox = progressElement.getBoundingClientRect();
       const width = progressBox.right - progressBox.left;
@@ -315,7 +323,7 @@ const app = {
       const pos = Math.max(x, 0.01);
       const time = (pos / width) * duration;
 
-      vnode.state.audioElement.currentTime = time;
+      return time;
     };
 
     vnode.state.whenAudioLoaded = function() {
