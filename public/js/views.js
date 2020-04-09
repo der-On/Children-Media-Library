@@ -224,8 +224,8 @@ function playbackControlsView(vnode, album) {
 }
 
 function playbackControlsProgressView(vnode) {
-  const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
-  const duration = vnode.state.store.get('playingDuration', 0) || 0;
+  const currentTime = vnode.state.audioElement.currentTime || 0;
+  const duration = vnode.state.audioElement.duration || 0;
   const progress = duration != 0 ? currentTime / duration : 0;
 
   return m('.controls__playback-progress', {
