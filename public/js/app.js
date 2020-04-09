@@ -6,6 +6,7 @@ const app = {
     vnode.state.store = store();
     vnode.state.screenSaverIsActive = false;
     vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+    vnode.state.touches = {};
 
     vnode.state.handleUserInput = function (event) {
       if (!vnode.state.screenSaverIsActive) {
@@ -16,7 +17,7 @@ const app = {
 
     vnode.state.startScreenSaver = function () {
       console.log('start screen saver');
-      vnode.state.screenSaverIsActive = true;
+      vnode.state.shandleProgressHandleTouchStartcreenSaverIsActive = true;
       m.redraw();
     };
 
@@ -154,45 +155,77 @@ const app = {
     };
 
     vnode.state.handleProgressHandleMouseDown = function (event) {
+      vnode.state.touches = {
+        0: {
+          clientX: event.clientX,
+          clientY: event.clientY
+        }
+      };
       document.body.addEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
       document.body.addEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
     };
 
     vnode.state.handleProgressHandleTouchStart = function (event) {
+      vnode.state.touches = {};
+      Array.from(event.changedTouches)
+      .forEach((touch) => {
+        vnode.state.touches[touch.identifier] = {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        };
+      });
+
       document.body.addEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
       document.body.addEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
       document.body.addEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
     };
 
     vnode.state.handleProgressHandleMouseMove = function (event) {
-      vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
+      const touch = vnode.state.touches[0];
+      const diffX = event.clientX - touch.clientX;
+      vnode.state.updateCurrentTimeFromProgressDrag(diffX);
     };
 
     vnode.state.handleProgressHandleTouchMove = function (event) {
-      vnode.state.updateCurrentTimeFromProgressDrag(event.changedTouches[0].clientX);
+      const touch = event.changedTouches[0];
+      const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
+
+      vnode.state.updateCurrentTimeFromProgressDrag(diffX);
     };
 
     vnode.state.handleProgressHandleMouseUp = function (event) {
+      const touch = event.changedTouches[0];
+      const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
+
       document.body.removeEventListener('mousemove', vnode.state.handleProgressHandleMouseMove);
       document.body.removeEventListener('mouseup', vnode.state.handleProgressHandleMouseUp);
-      vnode.state.updateCurrentTimeFromProgressDrag(event.clientX);
+      vnode.state.updateCurrentTimeFromProgressDrag(diffX);
+
+      vnode.state.touches = {};
     };
 
     vnode.state.handleProgressHandleTouchEnd = function (event) {
+      if (event.changedTouches && event.changedTouches.length > 0) {
+        const touch = event.changedTouches[0];
+        const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
+        vnode.state.updateCurrentTimeFromProgressDrag(diffX);
+      }
+
+      vnode.state.touches = {};
+
       document.body.removeEventListener('touchend', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchcancel', vnode.state.handleProgressHandleTouchEnd);
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
-
-      if (event.touches && event.touches.length > 0) {
-        vnode.state.updateCurrentTimeFromProgressDrag(event.changedTouches[0].clientX);
-      }
     };
 
     vnode.state.updateCurrentTimeFromProgressDrag = function (x) {
       const progressElement = document.getElementById('controls__playback-progress');
-      const box = progressElement.getBoundingClientRect();
-      const width = box.right - box.left;
-      const time = (Math.max(x - box.left, 0.01) / width) * vnode.state.audioElement.duration;
+      const progressBox = progressElement.getBoundingClientRect();
+      const width = progressBox.right - progressBox.left;
+      const duration = vnode.state.audioElement.duration;
+      const pos = Math.max(x, 0.01);
+      const time = (pos / width) * duration;
+
       vnode.state.audioElement.currentTime = time;
     };
 
