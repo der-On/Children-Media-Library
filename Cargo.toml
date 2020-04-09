@@ -21,3 +21,4 @@ sha1 = "0.6.0"
 natord = "1.0.9"
 log = "0.4.8"
 tokio = { version = "0.2", features = ["full"] }
+cmd_lib = "0.7.8"
