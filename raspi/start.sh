@@ -3,6 +3,7 @@
 cd "$(dirname "$0")"
 cd ..
 
+sleep 5
 ./raspi/bin/cli scan
 ./raspi/bin/server &
 SERVER_PID=$!
