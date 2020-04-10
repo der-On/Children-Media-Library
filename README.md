@@ -79,7 +79,7 @@ You must have rasbian installed on your Raspberry Pi.
 Do the configuration from above and then run:
 
 ```bash
-./raspi/setup.sh
+sudo ./raspi/setup.sh
 sudo reboot
 ```
 
