@@ -9,7 +9,6 @@ use std::path::Path;
 use self::hyper::{Body, Request, Response, Server, Method, StatusCode};
 use self::hyper::service::{make_service_fn, service_fn};
 use self::hyper_staticfile::Static;
-use self::cmd_lib::FunResult;
 
 type GenericError = Box<dyn std::error::Error + Send + Sync>;
 type Result<T> = std::result::Result<T, GenericError>;

@@ -6,11 +6,7 @@ use std::fs::File;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
     pub library: String,
-    pub port: u16,
-    pub lastFmApiKey: String,
-    pub discogsConsumerKey: String,
-    pub discogsConsumerSecret: String,
-    pub bluetoothSpeaker: String
+    pub port: u16
 }
 
 pub fn load(path: String) -> Result<Config, serde_json::Error> {
