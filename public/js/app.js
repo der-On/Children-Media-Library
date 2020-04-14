@@ -158,6 +158,26 @@ const app = {
       window.location.reload();
     };
 
+    vnode.state.scanLibrary = function () {
+      fetch('/scan', {
+        method: 'POST'
+      })
+      .then((res) => {
+        if (res.ok) {
+          return res.text();
+        } else {
+          throw new Error('Error during scan.');
+        }
+      })
+      .then(() => {
+        vnode.state.loadLibrary();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+      m.redraw();
+    };
+
     vnode.state.startScreenSaver = function () {
       console.log('start screen saver');
       vnode.state.shandleProgressHandleTouchStartcreenSaverIsActive = true;
@@ -377,6 +397,24 @@ const app = {
       return time;
     };
 
+    vnode.state.loadLibrary = function () {
+      fetch('./library.json?t=' + (new Date()).getTime())
+      .then(res => {
+        if (!res.ok) {
+          return Promise.reject(new Error('Unable to load library.'));
+        }
+
+        return res.json();
+      })
+      .then(library => {
+        // vnode.state.library = library;
+        vnode.state.library = groupLibrary(library);
+        m.redraw();
+        lazyLoad();
+      })
+      .catch(console.error.bind(console));
+    };
+
     vnode.state.whenAudioLoaded = function() {
       return new Promise((resolve, reject) => {
         const handler = () => {
@@ -391,21 +429,7 @@ const app = {
     window.addEventListener('resize', m.redraw.bind(m));
     window.addEventListener('resize', lazyLoad);
 
-    fetch('./library.json?t=' + (new Date()).getTime())
-    .then(res => {
-      if (!res.ok) {
-        return Promise.reject(new Error('Unable to load library.'));
-      }
-
-      return res.json();
-    })
-    .then(library => {
-      // vnode.state.library = library;
-      vnode.state.library = groupLibrary(library);
-      m.redraw();
-      lazyLoad();
-    })
-    .catch(console.error.bind(console));
+    vnode.state.loadLibrary();
   },
   oncreate: function(vnode) {
     const albumId = vnode.state.store.get('playingAlbum');

@@ -285,6 +285,12 @@ function headerView(vnode) {
         icon: '/images/reload_icon.png',
         label: 'reload',
         action: vnode.state.reload
+      },
+      {
+        id: 'scan',
+        icon: '/images/search_icon.png',
+        label: 'scan library',
+        action: vnode.state.scanLibrary
       }
     ].map(_.partial(headerNavItemView, vnode)))
   ]);

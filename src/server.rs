@@ -18,9 +18,10 @@ async fn request_handler(
     public_handler: Static,
     library_handler: Static
 ) -> Result<Response<Body>> {
-    match req.method() {
-        &Method::GET => {
-            let path = req.uri().path();
+    let path = req.uri().path();
+
+    match (req.method(), path) {
+        (&Method::GET, _) => {
             let uri = req.uri();
 
             if path.starts_with("/library/") == true {
@@ -42,36 +43,54 @@ async fn request_handler(
                 )
             }
         }
-        &Method::POST => {
-            let path = req.uri().path();
+        (&Method::POST, "/shutdown") => {
+            let output = cmd_lib::run_cmd("sh raspi/shutdown.sh");
 
-            if path == "/shutdown" {
-                let output = cmd_lib::run_cmd("sh raspi/shutdown.sh");
-
-                match output {
-                    Ok(_) => {
-                        Ok(Response::builder()
-                            .status(StatusCode::OK)
-                            .body("System shutdown initialized.".into())
-                            .unwrap()
-                        )
-                    },
-                    error => {
-                        eprintln!("Error during system shutdown: {:?}", error);
-                        Ok(Response::builder()
-                            .status(StatusCode::INTERNAL_SERVER_ERROR)
-                            .body("Error during system shutdown.".into())
-                            .unwrap()
-                        )
-                    }
+            match output {
+                Ok(_) => {
+                    Ok(Response::builder()
+                        .status(StatusCode::OK)
+                        .body("System shutdown initialized.".into())
+                        .unwrap()
+                    )
+                },
+                error => {
+                    eprintln!("Error during system shutdown: {:?}", error);
+                    Ok(Response::builder()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .body("Error during system shutdown.".into())
+                        .unwrap()
+                    )
                 }
-            } else {
-                Ok(Response::builder()
-                    .status(StatusCode::NOT_FOUND)
-                    .body("Not found.".into())
-                    .unwrap()
-                )
             }
+        }
+        (&Method::POST, "/scan") => {
+            let output = cmd_lib::run_cmd("sh raspi/scan.sh");
+
+            match output {
+                Ok(_) => {
+                    Ok(Response::builder()
+                        .status(StatusCode::OK)
+                        .body("Scan completed.".into())
+                        .unwrap()
+                    )
+                },
+                error => {
+                    eprintln!("Error during scan: {:?}", error);
+                    Ok(Response::builder()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .body("Error during scan.".into())
+                        .unwrap()
+                    )
+                }
+            }
+        }
+        (&Method::POST, _) => {
+            Ok(Response::builder()
+                .status(StatusCode::NOT_FOUND)
+                .body("Not found.".into())
+                .unwrap()
+            )
         }
         _ => {
             Ok(Response::builder()
