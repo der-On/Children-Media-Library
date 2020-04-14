@@ -85,13 +85,6 @@ async fn request_handler(
                 }
             }
         }
-        (&Method::POST, _) => {
-            Ok(Response::builder()
-                .status(StatusCode::NOT_FOUND)
-                .body("Not found.".into())
-                .unwrap()
-            )
-        }
         _ => {
             Ok(Response::builder()
                 .status(StatusCode::NOT_FOUND)
