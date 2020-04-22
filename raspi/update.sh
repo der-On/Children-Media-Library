@@ -5,4 +5,4 @@ cd ..
 
 git pull
 rm -rf ~/.cache/chromium/Default
-./setup.sh
+./raspi/setup.sh
