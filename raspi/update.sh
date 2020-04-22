@@ -3,5 +3,6 @@
 cd "$(dirname "$0")"
 cd ..
 
-git pull &&
+git pull
 rm -rf ~/.cache/chromium/Default
+./setup.sh

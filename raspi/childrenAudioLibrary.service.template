@@ -1,0 +1,16 @@
+[Unit]
+Description=Children Audio Libraray
+Wants=graphical.target
+After=graphical.target
+
+[Service]
+Environment=DISPLAY=ACTIVE_DISPLAY
+Environment=XAUTHORITY=/home/pi/.Xauthority
+Type=simple
+ExecStart=/bin/bash EXEC_SCRIPT
+Restart=on-abort
+User=pi
+Group=pi
+
+[Install]
+WantedBy=graphical.target

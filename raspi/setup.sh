@@ -3,24 +3,17 @@
 cd "$(dirname "$0")"
 cd ..
 
+EXEC_SCRIPT="${PWD}/raspi/start.sh"
+ACTIVE_DISPLAY="${DISPLAY}"
+EXEC_SCRIPT_ESCAPED=(${EXEC_SCRIPT//\//'\/'})
 
-echo "Seting up autostart on boot to desktop ..."
-mkdir -p ~/.config/autostart
-echo "[Desktop Entry]
-Type=Application
-Exec=$PWD/raspi/start.sh
-Hidden=false
-X-GNOME-Autostart-enabled=true
-Name[en_US]=AutoChildrenAudioLibrary
-Name=AutoChildrenAudioLibrary
-Comment=Start Children Audio Library when GNOME starts" > ~/.config/autostart/autoChildrenAudioLibrary.desktop
+echo "Setting up autostart on boot to desktop ..."
+# remove legacy autostart desktop shortcut
+rm -rf ~/.config/autostart/autoChildrenAudioLibrary.desktop
+sudo cp raspi/childrenAudioLibrary.service.template /lib/systemd/system/childrenAudioLibrary.service
+sudo sed -i "s/ACTIVE_DISPLAY/${ACTIVE_DISPLAY}/" /lib/systemd/system/childrenAudioLibrary.service
+sudo sed -i "s/EXEC_SCRIPT/${EXEC_SCRIPT_ESCAPED}/" /lib/systemd/system/childrenAudioLibrary.service
 
-echo "Disabling screen screensaver and screenblanking ..."
-sudo echo "" >> /etc/lightdm/lightdm.conf
-sudo echo "[SeatDefaults]" >> /etc/lightdm/lightdm.conf
-sudo echo "xserver-command=X -s 0 -dpms" >> /etc/lightdm/lightdm.conf
-sudo echo "@xset s noblank" >> /etc/xdg/lxsession/LXDE-pi/autostart
-sudo echo "@xset s off" >> /etc/xdg/lxsession/LXDE-pi/autostart
-sudo echo "@xset -dpms" >> /etc/xdg/lxsession/LXDE-pi/autostart
+sudo systemctl enable childrenAudioLibrary.service
 
 echo "Setup complete."
