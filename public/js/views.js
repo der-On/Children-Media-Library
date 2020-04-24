@@ -11,7 +11,7 @@ function appView(vnode) {
     color = albumColor(album);
   }
   return m('main.main', {
-    class: screenSaverIsActive || isShuttingDown ? 'has-screen-saver' : '',
+    class: (screenSaverIsActive || isShuttingDown) ? 'has-screen-saver' : '',
     onmousedown: vnode.state.handleMouseDown,
     onmousemove: vnode.state.handleUserInput,
     ontouchstart: vnode.state.handleTouchStart,

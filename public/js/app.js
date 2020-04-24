@@ -7,7 +7,6 @@ const app = {
   oninit: (vnode) => {
     vnode.state.store = store();
     vnode.state.screenSaverIsActive = false;
-    vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
     vnode.state.touches = {};
     vnode.state.draggingCurrentTime = -1;
 
@@ -180,7 +179,7 @@ const app = {
 
     vnode.state.startScreenSaver = function () {
       console.log('start screen saver');
-      vnode.state.shandleProgressHandleTouchStartcreenSaverIsActive = true;
+      vnode.state.screenSaverIsActive = true;
       m.redraw();
     };
 
@@ -429,6 +428,7 @@ const app = {
     window.addEventListener('resize', m.redraw.bind(m));
     window.addEventListener('resize', lazyLoad);
 
+    vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
     vnode.state.loadLibrary();
   },
   oncreate: function(vnode) {
