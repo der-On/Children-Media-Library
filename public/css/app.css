@@ -81,6 +81,30 @@ html, body {
 .header.is-visible .header__nav {
   transform: translate(0, 0);
 }
+.header__nav-item {
+  position: relative;
+  display: inline-block;
+}
+@keyframes header__nav-item-loader {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+.header__nav-item-loader {
+  position: absolute;
+  pointer-events: none;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 4px;
+  background-color: #000;
+}
+.header__nav-item.is-activating .header__nav-item-loader {
+  animation: header__nav-item-loader 3s linear forwards;
+}
 .audio {
   display: none;
 }
