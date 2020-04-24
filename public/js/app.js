@@ -33,7 +33,6 @@ const app = {
 
     vnode.state.handleMouseUp = function (event) {
       vnode.state.handleUserInput(event);
-
       vnode.state.touches = {};
       document.removeEventListener('mousemove', vnode.state.handleMouseMove);
       document.removeEventListener('mouseup', vnode.state.handleMouseUp);
@@ -124,7 +123,7 @@ const app = {
       return false;
     };
 
-    vnode.handleScreenSaverClick = function () {
+    vnode.state.handleScreenSaverClick = function () {
       if (vnode.state.isShuttingDown) {
         return false;
       }
@@ -186,6 +185,7 @@ const app = {
     vnode.state.stopScreenSaver = function () {
       console.log('stop screen saver');
       vnode.state.screenSaverIsActive = false;
+      m.redraw();
     };
 
     vnode.state.resetScreenSaver = function () {
