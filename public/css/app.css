@@ -96,7 +96,7 @@ html, body {
 .header__nav-item-loader {
   position: absolute;
   pointer-events: none;
-  bottom: -4px;
+  top: -4px;
   left: 0;
   width: 0%;
   height: 4px;
