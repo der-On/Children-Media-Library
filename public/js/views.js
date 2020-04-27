@@ -40,8 +40,6 @@ function audioView(vnode) {
     id: 'controls__playback-audio',
     src: album ? `./library/${album.media[playingTrack]}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
-    onpause: vnode.state.handleAudioPause,
-    onplay: vnode.state.handleAudioPlay,
     preload: 'auto'
   });
 }
@@ -178,9 +176,9 @@ function albumsAlbumView(vnode, album) {
 }
 
 function controlsView(vnode) {
-  const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
-  const playingAlbum = vnode.state.store.get('playingAlbum');
-  const isPlaying = album && playingAlbum === album.id;
+  const selectedAlbum = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
+  const playingAlbumId = vnode.state.store.get('playingAlbum');
+  const isPlaying = selectedAlbum && playingAlbumId === selectedAlbum.id;
   const playingTrack = vnode.state.store.get('playingTrack');
   const selectedTrack = vnode.state.store.get('selectedTrack', 0);
   const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
@@ -188,21 +186,21 @@ function controlsView(vnode) {
   const currentTrack = isPlaying ? playingTrack : selectedTrack;
 
   return m('section.controls',
-    album ? [
-        m('.controls__album', albumCoverView(vnode, album, {
-          onclick: _.partial(vnode.state.showFullScreenAlbumCover, album.id)
+    selectedAlbum ? [
+        m('.controls__album', albumCoverView(vnode, selectedAlbum, {
+          onclick: _.partial(vnode.state.showFullScreenAlbumCover, selectedAlbum.id)
         })),
         m('.controls__album-track', [
-          `${album.artist} - ${album.title}`, m('br'),
-          `${currentTrack + 1} / ${album.media.length}`,': ',
-          `${pathBasename(album.media[currentTrack], pathExtname(album.media[currentTrack]))}`
+          `${selectedAlbum.artist} - ${selectedAlbum.title}`, m('br'),
+          `${currentTrack + 1} / ${selectedAlbum.media.length}`,': ',
+          `${pathBasename(selectedAlbum.media[currentTrack], pathExtname(selectedAlbum.media[currentTrack]))}`
         ]),
         m('.controls__duration', [
           formatTime(currentTime),
           ' / ',
           formatTime(duration)
         ]),
-        playbackControlsView(vnode, album)
+        playbackControlsView(vnode, selectedAlbum)
     ] : null
   );
 }

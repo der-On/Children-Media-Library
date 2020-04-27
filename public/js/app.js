@@ -316,20 +316,6 @@ const app = {
       return _.find(_.get(vnode.state, 'library.albums', []), ['id', albumId]);
     };
 
-    vnode.state.handleAudioPause = function (event) {
-      const albumId = vnode.state.store.get('playingAlbum');
-      if (albumId) {
-        vnode.state.pause(albumId);
-      }
-    };
-
-    vnode.state.handleAudioPlay = function (event) {
-      const albumId = vnode.state.store.get('playingAlbum');
-      if (albumId) {
-        vnode.state.play(albumId);
-      }
-    };
-
     vnode.state.handleAudioTimeupdate = function (event) {
       const currentTime = vnode.state.audioElement.currentTime;
       const duration = vnode.state.audioElement.duration;
