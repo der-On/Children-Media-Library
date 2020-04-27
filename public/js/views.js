@@ -183,10 +183,14 @@ function albumsAlbumView(vnode, album) {
 
 function controlsView(vnode) {
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
+  const playingAlbum = vnode.state.store.get('playingAlbum');
+  const isPlaying = album && playingAlbum === album.id;
   const playingTrack = vnode.state.store.get('playingTrack');
+  const selectedTrack = vnode.state.store.get('selectedTrack', 0);
   const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
   const duration = vnode.state.store.get('playingDuration', 0) || 0;
-
+  const currentTrack = isPlaying ? playingTrack : selectedTrack;
+  
   return m('section.controls',
     album ? [
         m('.controls__album', albumCoverView(vnode, album, {
@@ -194,7 +198,7 @@ function controlsView(vnode) {
         })),
         m('.controls__album-track', [
           `${album.artist} - ${album.title}`, m('br'),
-          `${playingTrack + 1} / ${album.media.length}`
+          `${currentTrack + 1} / ${album.media.length}`
         ]),
         m('.controls__duration', [
           formatTime(currentTime),
@@ -301,7 +305,7 @@ function headerNavItemView(vnode, item) {
   const releaseHandler = _.partial(vnode.state.handleHeaderNavItemRelease, item);
   const cancelHandler = _.partial(vnode.state.handleHeaderNavItemCancel, item);
   const isActivating = _.get(vnode.state.pressedHeaderNavItem, 'id') === item.id;
-  console.log(item.id, isActivating);
+
   return m('button.header__nav-item', {
     class: isActivating ? 'is-activating' : '',
     onmousedown: pressHandler,

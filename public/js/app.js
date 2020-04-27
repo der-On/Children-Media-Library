@@ -205,20 +205,27 @@ const app = {
 
     vnode.state.selectAlbum = function(albumId) {
       console.log('selectAlbum', albumId);
-      vnode.state.store.set('selectedAlbum', albumId);
+      vnode.state.store.set({
+        selectedAlbum: albumId,
+        selectedTrack: 0
+      });
       lazyLoadDelayed();
     };
 
     vnode.state.play = function(albumId) {
       console.log('play', albumId);
+      const playingAlbumId = vnode.state.store.get('playingAlbum');
+
       vnode.state.store.set({
         selectedAlbum: albumId,
         playingAlbum: albumId,
-        playingTrack: vnode.state.store.get('playingAlbum') !== albumId
-          ? 0
+        playingTrack: playingAlbumId !== albumId
+          ? vnode.state.store.get('selectedTrack', 0)
           : vnode.state.store.get('playingTrack', 0),
         playing: true,
       });
+      m.redraw();
+
       vnode.state.audioElement.play();
     };
 
@@ -234,38 +241,60 @@ const app = {
 
     vnode.state.nextTrack = function() {
       console.log('nextTrack');
-      const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
-      if (!album) {
-        return;
-      }
+      const playingAlbumId = vnode.state.store.get('playingAlbum');
+      const selectedAlbumId = vnode.state.store.get('selectedAlbum');
+      const playingAlbum = vnode.state.getAlbumById(playingAlbumId);
+      const selectedAlbum = vnode.state.getAlbumById(selectedAlbumId);
 
-      const nextTrack = vnode.state.store.get('playingTrack', 0) + 1;
-      vnode.state.store.set('playingTrack', Math.min(nextTrack, album.media.length - 1));
-
-      vnode.state.whenAudioLoaded()
-      .then(() => {
-        vnode.state.audioElement.play();
-      });
-    };
-
-    vnode.state.prevTrack = function() {
-      console.log('prevTrack');
-      const album = vnode.state.getAlbumById(vnode.state.store.get('playingAlbum'));
-      const currentTime = vnode.state.store.get('playingCurrentTime');
-      if (!album) {
-        return;
-      }
-
-      if (currentTime > 1) {
-        vnode.state.audioElement.currentTime = 0;
-      } else {
-        const prevTrack = vnode.state.store.get('playingTrack', 0) - 1;
-        vnode.state.store.set('playingTrack', Math.max(prevTrack, 0));
+      if (selectedAlbum && playingAlbum && selectedAlbumId !== playingAlbumId) {
+        const nextTrack = Math.min(
+          vnode.state.store.get('selectedTrack', 0) + 1,
+          selectedAlbum.media.length - 1
+        );
+        vnode.state.store.set('selectedTrack', nextTrack);
+      } else if (playingAlbum) {
+        const nextTrack = Math.min(
+          vnode.state.store.get('playingTrack', 0) + 1,
+          playingAlbum.media.length - 1
+        );
+        vnode.state.store.set('playingTrack', nextTrack);
 
         vnode.state.whenAudioLoaded()
         .then(() => {
           vnode.state.audioElement.play();
         });
+      }
+    };
+
+    vnode.state.prevTrack = function() {
+      console.log('prevTrack');
+      const playingAlbumId = vnode.state.store.get('playingAlbum');
+      const selectedAlbumId = vnode.state.store.get('selectedAlbum');
+      const playingAlbum = vnode.state.getAlbumById(playingAlbumId);
+      const selectedAlbum = vnode.state.getAlbumById(selectedAlbumId);
+      const currentTime = vnode.state.store.get('playingCurrentTime');
+
+      if (selectedAlbum && playingAlbum && selectedAlbumId !== playingAlbumId) {
+        const prevTrack = Math.max(
+          vnode.state.store.get('selectedTrack', 0) - 1,
+          0
+        );
+        vnode.state.store.set('selectedTrack', prevTrack);
+      } else {
+        if (currentTime > 1) {
+          vnode.state.audioElement.currentTime = 0;
+        } else {
+          const prevTrack = Math.max(
+            vnode.state.store.get('playingTrack', 0) - 1,
+            0
+          );
+          vnode.state.store.set('playingTrack', prevTrack);
+
+          vnode.state.whenAudioLoaded()
+          .then(() => {
+            vnode.state.audioElement.play();
+          });
+        }
       }
     };
 
