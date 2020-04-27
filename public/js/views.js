@@ -69,6 +69,9 @@ function albumGroupsGroupView(vnode, width, albumGroups, index) {
 function albumGroupView(vnode, albumGroup) {
   const className = [];
   const onclick = _.partial(vnode.state.openAlbumGroup, albumGroup.id);
+  const playing = vnode.state.store.get('playing', false);
+  const playingAlbumId = vnode.state.store.get('playingAlbum');
+  const isPlaying = playingAlbumId ? _.findIndex(albumGroup.albums, ['id', playingAlbumId]) !== -1 : false;
 
   return m('.albums__album', {
     className: className.join(' '),
@@ -76,7 +79,10 @@ function albumGroupView(vnode, albumGroup) {
   }, [
     albumGroupCoverView(vnode, albumGroup, {
       onclick
-    })
+    }),
+    m('i.icon.albums__album-icon', {
+      className: isPlaying && playing ? '' : 'is-hidden'
+    },'play_circle_filled')
   ]);
 }
 
