@@ -341,7 +341,18 @@ const app = {
 
       // skip to next track if reached end
       if (currentTime === duration) {
-        vnode.state.nextTrack();
+        const playingAlbumId = vnode.state.store.get('playingAlbum');
+        const playingAlbum = vnode.state.getAlbumById(playingAlbumId);
+        const nextTrack = Math.min(
+          vnode.state.store.get('playingTrack', 0) + 1,
+          playingAlbum.media.length - 1
+        );
+        vnode.state.store.set('playingTrack', nextTrack);
+
+        vnode.state.whenAudioLoaded()
+        .then(() => {
+          vnode.state.audioElement.play();
+        });
       }
     };
 
