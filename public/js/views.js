@@ -194,7 +194,8 @@ function controlsView(vnode) {
         })),
         m('.controls__album-track', [
           `${album.artist} - ${album.title}`, m('br'),
-          `${currentTrack + 1} / ${album.media.length}`
+          `${currentTrack + 1} / ${album.media.length}`,': ',
+          `${pathBasename(album.media[currentTrack], pathExtname(album.media[currentTrack]))}`
         ]),
         m('.controls__duration', [
           formatTime(currentTime),

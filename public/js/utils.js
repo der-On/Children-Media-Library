@@ -61,3 +61,15 @@ function groupLibrary(library) {
 
   return library;
 }
+
+function pathExtname(path) {
+  const ext = _.last(path.split('.'));
+  return ext ? '.' + ext : null;
+}
+
+function pathBasename(path, ext = null) {
+  const basename = _.last(path.split('/'));
+  if (ext && basename.indexOf(ext) === basename.length - ext.length) {
+    return basename.substr(0, basename.length - ext.length);
+  }
+}
