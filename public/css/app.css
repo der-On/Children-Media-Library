@@ -161,6 +161,7 @@ html, body {
   padding: 0;
   cursor: pointer;
   transition: all 0.25s linear;
+  overflow: hidden;
 }
 .album__cover-image,
 .album__group-cover-images {
