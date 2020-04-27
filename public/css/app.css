@@ -213,7 +213,6 @@ html, body {
   right: 0;
   bottom: 0;
   background-color: var(--color-black);
-  background-size: contain;
   width: auto;
   height: auto;
   box-shadow: none;
@@ -221,6 +220,9 @@ html, body {
   opacity: 1;
   border-radius: 0;
   z-index: 10;
+}
+.album__cover--fullscreen .album__cover-image {
+  background-size: contain;
 }
 .album__cover--fullscreen.is-hidden {
   opacity: 0;

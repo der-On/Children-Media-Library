@@ -105,18 +105,6 @@ function albumGroupCoverView(vnode, albumGroup, args = {}) {
   ]);
 }
 
-function fullscreenAlbumCoverView(vnode) {
-  const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
-  const fullscreenAlbumId = vnode.state.store.get('fullscreenAlbum');
-
-  return album ? m('figure.album__cover.album__cover--fullscreen', {
-    className: fullscreenAlbumId !== album.id ? 'is-hidden' : '',
-    style: `background-image: url("${album.cover}")`,
-    onclick: vnode.state.hideFullScreenAlbumCover,
-    title: `${album.artist} - ${album.title}`
-  }) : null;
-}
-
 function closeAlbumGroupAlbum(vnode) {
   return {
     title: null,
@@ -286,10 +274,13 @@ function fullscreenAlbumCoverView(vnode) {
 
   return album ? m('figure.album__cover.album__cover--fullscreen', {
     className: fullscreenAlbumId !== album.id ? 'is-hidden' : '',
-    style: `background-image: url("${album.cover}")`,
     onclick: vnode.state.hideFullScreenAlbumCover,
     title: `${album.artist} - ${album.title}`
-  }) : null;
+  }, [
+    m('.album__cover-image', {
+      style: `background-image: url("${album.cover}")`
+    })
+  ]) : null;
 }
 
 function headerView(vnode) {
