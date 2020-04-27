@@ -20,7 +20,7 @@ const app = {
       };
 
       document.addEventListener('mousemove', vnode.state.handleMouseMove);
-      document.addEventListehandleHeaderNavItemPressner('mouseup', vnode.state.handleMouseUp);
+      document.addEventListener('mouseup', vnode.state.handleMouseUp);
     };
 
     vnode.state.handleMouseMove = function (event) {
