@@ -151,7 +151,7 @@ html, body {
 }
 .album__cover,
 .album__group-cover {
-  border: 1px solid var(--color-black);
+  position: relative;
   box-shadow: var(--box-shadow);
   border-radius: var(--border-radius);
   background-color: var(--color-white);
@@ -159,19 +159,51 @@ html, body {
   height: var(--cover-height);
   margin: 0;
   padding: 0;
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
   cursor: pointer;
   transition: all 0.25s linear;
 }
-.album__group-cover {
+.album__cover-image,
+.album__group-cover-images {
+  border: 1px solid var(--color-black);
+  border-radius: var(--border-radius);
+  background-repeat: no-repeat;
+}
+.album__group-cover-images {
   background-position: top left, top right, bottom left, bottom right;
   background-size: 50% 50%, 50% 50%, 50% 50%;
+}
+.album__cover-image {
+  background-position: center center;
+  background-size: cover;
+}
+
+.album__cover-image,
+.album__group-cover-images {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.album__cover-caption,
+.album__group-cover-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px;
+  line-height: 1.5;
+  font-size: 1.5rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.5);
+  overflow: hidden;
 }
 .albums__album.is-selected .album__cover {
   border: 1px solid var(--color-white);
   box-shadow: var(--box-shadow-selected);
+}
+.albums__album.is-selected .album__cover-image {
+  border: 1px solid var(--color-white);
 }
 .album__cover--fullscreen {
   position: absolute;

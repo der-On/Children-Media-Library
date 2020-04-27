@@ -72,4 +72,5 @@ function pathBasename(path, ext = null) {
   if (ext && basename.indexOf(ext) === basename.length - ext.length) {
     return basename.substr(0, basename.length - ext.length);
   }
+  return basename;
 }

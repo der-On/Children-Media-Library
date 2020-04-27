@@ -81,16 +81,22 @@ function albumGroupView(vnode, albumGroup) {
 }
 
 function albumGroupCoverView(vnode, albumGroup, args = {}) {
+  const title = pathBasename(albumGroup.title) || '';
   const backgroundImages = albumGroup.albums
   .slice(0, 4)
   .map(function (album) {
     return `url("${album.cover}")`;
   });
-  return m('figure.album__group-cover.lazy-load', _.assign({
-    style: `background-color: ${albumColor(albumGroup, 50, 60)}; background-image: ${backgroundImages.join(', ')};`,
-    'data-loaded': 'false',
-    title: `${albumGroup.title}`
-  }, args));
+  return m('figure.album__group-cover', _.assign({
+    style: `background-color: ${albumColor(albumGroup, 50, 60)};`,
+    title: title
+  }, args), [
+    m('figcaption.album__group-cover-caption', title),
+    m('.album__group-cover-images.lazy-load', {
+      style: `background-image: ${backgroundImages.join(', ')};`,
+      'data-loaded': 'false',
+    })
+  ]);
 }
 
 function fullscreenAlbumCoverView(vnode) {
@@ -249,11 +255,23 @@ function playbackControlsProgressView(vnode) {
 
 function albumCoverView(vnode, album, args = {}) {
   const backgroundImage = `url("${album.cover}")`;
-  return m('figure.album__cover.lazy-load', _.assign({
-    style: `background-color: ${albumColor(album, 50, 60)}; background-image: ${backgroundImage};`,
-    'data-loaded': 'false',
-    title: `${album.artist} - ${album.title}`
-  }, args));
+  let title = '';
+
+  if (album.artist && album.title) {
+    title = `${album.artist} - ${album.title}`
+  } else if(album.title) {
+    title = album.title;
+  };
+  return m('figure.album__cover', _.assign({
+    style: `background-color: ${albumColor(album, 50, 60)};`,
+    title: title,
+  }, args), [
+    m('figcaption.album__cover-caption', title),
+    m('.album__cover-image.lazy-load', {
+      style: `background-image: ${backgroundImage};`,
+      'data-loaded': 'false',
+    })
+  ]);
 }
 
 function fullscreenAlbumCoverView(vnode) {
