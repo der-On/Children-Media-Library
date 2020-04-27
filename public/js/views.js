@@ -151,13 +151,9 @@ function albumsAlbumView(vnode, album) {
   if (album.onclick) {
     onclick = album.onclick;
   }
-  else if (!isPlaying && isSelected) {
-    onclick = _.partial(vnode.state.play, album.id);
-  } else if (isPlaying && !isSelected) {
-    onclick = _.partial(vnode.state.selectAlbum, album.id);
-  } else if (isPlaying) {
-    onclick = _.partial(playing ? vnode.state.pause : vnode.state.play, album.id);
-  } else if (!isSelected) {
+  else if (isSelected) {
+    onclick = _.partial(vnode.state.showFullScreenAlbumCover, album.id);
+  } else {
     onclick = _.partial(vnode.state.selectAlbum, album.id);
   }
 
@@ -190,7 +186,7 @@ function controlsView(vnode) {
   const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
   const duration = vnode.state.store.get('playingDuration', 0) || 0;
   const currentTrack = isPlaying ? playingTrack : selectedTrack;
-  
+
   return m('section.controls',
     album ? [
         m('.controls__album', albumCoverView(vnode, album, {
