@@ -81,8 +81,8 @@ function albumGroupView(vnode, albumGroup) {
       onclick
     }),
     m('i.icon.albums__album-icon', {
-      className: isPlaying && playing ? '' : 'is-hidden'
-    },'play_circle_filled')
+      className: isPlaying ? '' : 'is-hidden'
+    }, playing ? 'play_circle_filled' : 'pause_circle_filled')
   ]);
 }
 
@@ -170,8 +170,8 @@ function albumsAlbumView(vnode, album) {
       onclick
     }),
     m('i.icon.albums__album-icon', {
-      className: isPlaying && playing ? '' : 'is-hidden'
-    },'play_circle_filled')
+      className: isPlaying ? '' : 'is-hidden'
+    }, playing ? 'play_circle_filled' : 'pause_circle_filled')
   ]);
 }
 
