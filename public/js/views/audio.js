@@ -4,7 +4,7 @@ export default function audioView(vnode) {
 
   return m('audio.audio', {
     id: 'controls__playback-audio',
-    src: album ? `./library/${album.audios[playingTrack]}` : '',
+    src: album ? `${album.audios[playingTrack]}` : '',
     ontimeupdate: vnode.state.handleAudioTimeupdate,
     preload: 'auto'
   });

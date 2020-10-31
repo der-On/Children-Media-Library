@@ -100,7 +100,10 @@ export function groupLibrary(library) {
   // and at the same time only keep albums on top level
   // that are in the root directory
   library.rootAlbums = library.albums.filter(function (album) {
-    album.cover = './library/' + encodeURI(album.cover);
+    album.cover = getLibraryPath(album.cover);
+    album.images = album.images.map(getLibraryPath);
+    album.videos = album.videos.map(getLibraryPath);
+    album.audios = album.audios.map(getLibraryPath);
 
     // album is in root dir, keep it
     if (album.src.indexOf('/') === -1) {
@@ -123,6 +126,10 @@ export function groupLibrary(library) {
   library.groups = collectGroups();
 
   return library;
+}
+
+function getLibraryPath(path) {
+  return './library/' + encodeURI(path);
 }
 
 export function pathExtname(path) {
