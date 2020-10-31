@@ -1,6 +1,17 @@
-const idleDelay = 5 * 60 * 1000; // 5 min
-const headerDragDownDistance = 0.5; // half screen height
-const headerNavItemPressDuration = 3000; // 3s
+import store from './store.js';
+import {
+  groupLibrary
+} from './utils.js';
+import {
+  lazyLoad,
+  lazyLoadDelayed,
+} from './lazyLoad.js';
+import {
+  IDLE_DELAY,
+  HEADER_DRAG_DOWN_DISTANCE,
+  HEADER_NAV_ITEM_PRESS_DURATION,
+} from './constants.js';
+import appView from './views/app.js';
 
 const app = {
   view: appView,
@@ -76,11 +87,11 @@ const app = {
       const pos = y / windowHeight;
 
       if (vnode.state.headerIsVisible && pos < 0) {
-        if (-pos >= headerDragDownDistance) {
+        if (-pos >= HEADER_DRAG_DOWN_DISTANCE) {
           vnode.state.headerIsVisible = false;
           m.redraw();
         }
-      } else if (pos >= headerDragDownDistance) {
+      } else if (pos >= HEADER_DRAG_DOWN_DISTANCE) {
         vnode.state.headerIsVisible = true;
         m.redraw();
       }
@@ -89,7 +100,7 @@ const app = {
     vnode.state.handleUserInput = function (event) {
       if (!vnode.state.screenSaverIsActive) {
         clearTimeout(vnode.state.idleTimeout);
-        vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+        vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, IDLE_DELAY);
       }
     };
 
@@ -106,7 +117,7 @@ const app = {
       const now = (new Date()).getTime();
       if (
         _.get(vnode.state.pressedHeaderNavItem, 'id') === item.id &&
-        now - vnode.state.pressedHeaderNavItem.pressedAt >= headerNavItemPressDuration
+        now - vnode.state.pressedHeaderNavItem.pressedAt >= HEADER_NAV_ITEM_PRESS_DURATION
       ) {
         item.action();
       }
@@ -190,7 +201,7 @@ const app = {
 
     vnode.state.resetScreenSaver = function () {
       vnode.state.stopScreenSaver();
-      vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+      vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, IDLE_DELAY);
     };
 
     vnode.state.openAlbumGroup = function(albumGroupId) {
@@ -207,7 +218,7 @@ const app = {
       console.log('selectAlbum', albumId);
       vnode.state.store.set({
         selectedAlbum: albumId,
-        selectedTrack: 0
+        selectedAudioTrack: 0
       });
       lazyLoadDelayed();
     };
@@ -220,7 +231,7 @@ const app = {
         selectedAlbum: albumId,
         playingAlbum: albumId,
         playingTrack: playingAlbumId !== albumId
-          ? vnode.state.store.get('selectedTrack', 0)
+          ? vnode.state.store.get('selectedAudioTrack', 0)
           : vnode.state.store.get('playingTrack', 0),
         playing: true,
       });
@@ -248,14 +259,14 @@ const app = {
 
       if (selectedAlbum && playingAlbum && selectedAlbumId !== playingAlbumId) {
         const nextTrack = Math.min(
-          vnode.state.store.get('selectedTrack', 0) + 1,
-          selectedAlbum.media.length - 1
+          vnode.state.store.get('selectedAudioTrack', 0) + 1,
+          selectedAlbum.audios.length - 1
         );
-        vnode.state.store.set('selectedTrack', nextTrack);
+        vnode.state.store.set('selectedAudioTrack', nextTrack);
       } else if (playingAlbum) {
         const nextTrack = Math.min(
           vnode.state.store.get('playingTrack', 0) + 1,
-          playingAlbum.media.length - 1
+          playingAlbum.audios.length - 1
         );
         vnode.state.store.set('playingTrack', nextTrack);
 
@@ -276,10 +287,10 @@ const app = {
 
       if (selectedAlbum && playingAlbum && selectedAlbumId !== playingAlbumId) {
         const prevTrack = Math.max(
-          vnode.state.store.get('selectedTrack', 0) - 1,
+          vnode.state.store.get('selectedAudioTrack', 0) - 1,
           0
         );
-        vnode.state.store.set('selectedTrack', prevTrack);
+        vnode.state.store.set('selectedAudioTrack', prevTrack);
       } else {
         if (currentTime > 1) {
           vnode.state.audioElement.currentTime = 0;
@@ -331,7 +342,7 @@ const app = {
         const playingAlbum = vnode.state.getAlbumById(playingAlbumId);
         const nextTrack = Math.min(
           vnode.state.store.get('playingTrack', 0) + 1,
-          playingAlbum.media.length - 1
+          playingAlbum.audios.length - 1
         );
         vnode.state.store.set('playingTrack', nextTrack);
 
@@ -454,7 +465,7 @@ const app = {
     window.addEventListener('resize', m.redraw.bind(m));
     window.addEventListener('resize', lazyLoad);
 
-    vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, idleDelay);
+    vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, IDLE_DELAY);
     vnode.state.loadLibrary();
   },
   oncreate: function(vnode) {
