@@ -4,6 +4,7 @@ import {
 import audioView from './audio.js';
 import coversView from './covers.js';
 import controlsView from './controls.js';
+import albumGalleryView from './albumGallery.js';
 import fullscreenAlbumCoverView from './fullscreenAlbumCover.js';
 import headerView from './header.js';
 import screenSaverView from './screenSaver.js';
@@ -15,7 +16,7 @@ export default function appView(vnode) {
   const group = vnode.state.getGroupById(vnode.state.store.get('openedGroup'));
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
   let color = null;
-  
+
   if (group) {
     color = albumColor(group);
   } else if (album) {
@@ -35,6 +36,7 @@ export default function appView(vnode) {
     coversView(vnode, group),
     controlsView(vnode),
     fullscreenAlbumCoverView(vnode),
+    albumGalleryView(vnode),
     headerView(vnode),
     screenSaverView(vnode)
   ]);

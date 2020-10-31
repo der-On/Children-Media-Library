@@ -15,17 +15,31 @@ export default function controlsView(vnode) {
   const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
   const duration = vnode.state.store.get('playingDuration', 0) || 0;
   const currentTrack = isPlaying ? playingTrack : selectedAudioTrack;
+  let tracks = [];
+  let hasAudio = false;
+  let hasVideo = false;
+
+  if (selectedAlbum) {
+    hasAudio = selectedAlbum.audios.length > 0;
+    hasVideo = selectedAlbum.videos.length > 0;
+
+    if (hasAudio) {
+      tracks = selectedAlbum.audios;
+    } else if (hasVideo) {
+      tracks = selectedAlbum.videos;
+    }
+  }
 
   return m('section.controls',
-    selectedAlbum ? [
+    selectedAlbum && (hasAudio || hasVideo) ? [
         m('.controls__album', albumCoverView(vnode, selectedAlbum, {
           onclick: _.partial(vnode.state.showFullScreenAlbumCover, selectedAlbum.id)
         })),
         m('.controls__album-track', [
           `${selectedAlbum.artist} - ${selectedAlbum.title}`, m('br'),
-          `${currentTrack + 1} / ${selectedAlbum.audios.length}`, ': ',
-          selectedAlbum.audios[currentTrack]
-          ? `${pathBasename(selectedAlbum.audios[currentTrack], pathExtname(selectedAlbum.audios[currentTrack]))}`
+          `${currentTrack + 1} / ${tracks.length}`, ': ',
+          tracks[currentTrack]
+          ? `${pathBasename(tracks[currentTrack], pathExtname(tracks[currentTrack]))}`
           : null
         ]),
         m('.controls__duration', [

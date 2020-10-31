@@ -4,6 +4,9 @@ import {
 
 export default function albumCoverView(vnode, album, args = {}) {
   let title = '';
+  const hasAudio = (album.audios || []).length > 0;
+  const hasImages = (album.images || []).length > 0;
+  const hasVideos = (album.videos || []).length > 0;
 
   if (album.artist && album.title) {
     title = `${album.artist} - ${album.title}`
@@ -11,7 +14,7 @@ export default function albumCoverView(vnode, album, args = {}) {
     title = album.title;
   };
 
-  if (album.images) {
+  if (!hasAudio && hasImages) {
     const backgroundImages = album.images
     .slice(0, 4)
     .map(function (image) {

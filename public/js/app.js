@@ -223,6 +223,29 @@ const app = {
       lazyLoadDelayed();
     };
 
+    vnode.state.openAlbumGallery = function(albumId) {
+      console.log('openAlbumGallery', albumId);
+      vnode.state.store.set({
+        openedAlbumGallery: albumId,
+        activeGalleyImage: 0
+      });
+      lazyLoadDelayed();
+    };
+
+    vnode.state.closeAlbumGallery = function() {
+      console.log('closeAlbumGallery');
+      vnode.state.store.set({
+        openedAlbumGallery: null,
+        activeGalleyImage: 0
+      });
+    };
+
+    vnode.state.setActiveGAlleryImage = function(index) {
+      vnode.state.store.set({
+        activeGalleyImage: index
+      });
+    };
+
     vnode.state.play = function(albumId) {
       console.log('play', albumId);
       const playingAlbumId = vnode.state.store.get('playingAlbum');
