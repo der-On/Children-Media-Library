@@ -1,6 +1,6 @@
-# Children Audio Library
+# Children Media Library
 
-Web based audio library for children. Made for the Raspberry Pi 7" Touchscreen.
+Web based media library for children. Made for the Raspberry Pi 7" Touchscreen.
 
 ![Photo](./design/photo.jpg)
 
@@ -17,6 +17,8 @@ Web based audio library for children. Made for the Raspberry Pi 7" Touchscreen.
 - [x] make it shutdown system after user action
 - [x] make it work completly offline
 - [x] provide a CLI to rescan library folder(s) and stop/start/maintain it
+- [ ] allow browsing and swiping through image galleries
+- [ ] allow browsing and viewing of videos
 
 ## Configuration
 
@@ -25,9 +27,7 @@ Copy `config.example.json` to `config.json` and adjust to your needs.
 ```javascript
 {
   // list of paths to audio libraries
-  "library": [
-    "/media/pi"
-  ],
+  "library": "/media/pi",
 
   // port at which the server should run
   "port": 8000
@@ -39,7 +39,7 @@ See this [guide on getting bluetooth audio work](https://www.raspberrypi.org/mag
 ## Develop
 
 ```bash
-LIBRARY_PATH=~/Music docker-compose up --build
+LIBRARY_PATHS=~/Music,~/Photos,~/Videos docker-compose up --build
 ```
 
 Then in a second terminal do the following to scan the music library

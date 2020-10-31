@@ -9,10 +9,17 @@ use std::path::Path;
 use self::chrono::prelude::*;
 use self::sha1::Sha1;
 
-pub const MEDIA_EXTENSIONS: [&str; 3] = [
+pub const AUDIO_EXTENSIONS: [&str; 3] = [
     "mp3",
     "wav",
     "ogg"
+];
+
+pub const VIDEO_EXTENSIONS: [&str; 4] = [
+    "mp4",
+    "mpeg",
+    "ogv",
+    "webm"
 ];
 
 pub const IMAGE_EXTENSIONS: [&str; 3] = [
@@ -33,17 +40,19 @@ pub struct Album {
     src: String,
     artist: String,
     title: String,
-    media: Vec<String>,
+    audios: Vec<String>,
+    images: Vec<String>,
+    videos: Vec<String>,
     cover: String
 }
 
 pub fn scan(path: String) -> Library {
+    let mut albums: Vec<Album> = Vec::new();
+
     let _albums = find_albums(Path::new(path.as_str()));
     let prefix_length = path.len() + 1;
 
     // remove library path from all album and media paths
-    let mut albums: Vec<Album> = Vec::new();
-
     for album in _albums {
         // skip albums without media
         if album_contains_media(&album) == false {
@@ -56,12 +65,26 @@ pub fn scan(path: String) -> Library {
         let mut cover = album.cover.clone();
         cover.drain(0..prefix_length);
 
-        let mut media: Vec<String> = Vec::new();
+        let mut audio_files: Vec<String> = Vec::new();
+        let mut image_files: Vec<String> = Vec::new();
+        let mut video_files: Vec<String> = Vec::new();
 
-        for file in album.media {
+        for file in album.audios {
             let mut _file = file.clone();
             _file.drain(0..prefix_length);
-            media.push(_file);
+            audio_files.push(_file);
+        }
+
+        for file in album.images {
+            let mut _file = file.clone();
+            _file.drain(0..prefix_length);
+            image_files.push(_file);
+        }
+
+        for file in album.videos {
+            let mut _file = file.clone();
+            _file.drain(0..prefix_length);
+            video_files.push(_file);
         }
 
         albums.push(Album {
@@ -69,7 +92,9 @@ pub fn scan(path: String) -> Library {
             artist: album.artist.clone(),
             title: album.title.clone(),
             src,
-            media,
+            audios: audio_files,
+            images: image_files,
+            videos: video_files,
             cover
         });
     }
@@ -135,7 +160,9 @@ fn readdir_recursive(path: &Path) -> Vec<String> {
 // }
 
 fn album_contains_media(album: &Album) -> bool {
-    album.media.len() > 0
+    album.audios.len() > 0 ||
+    album.images.len() > 0 ||
+    album.videos.len() > 0
 }
 
 fn is_dir(path: &Path) -> bool {
@@ -154,26 +181,30 @@ fn sha1_from_path(path: &Path) -> String {
 
 fn scan_album(path: &Path) -> Album {
     let files: Vec<String> = readdir(path);
-    let mut media_files: Vec<String> = files.clone();
-    media_files.retain(|ref file| is_media_file(Path::new(file.clone().as_str())));
-    let mut cover_files: Vec<String> = files.clone();
-    cover_files.retain(|ref file| is_album_cover(Path::new(file.clone().as_str())));
+    let mut audio_files: Vec<String> = files.clone();
+    audio_files.retain(|ref file| is_audio_file(Path::new(file.clone().as_str())));
+    let mut image_files: Vec<String> = files.clone();
+    image_files.retain(|ref file| is_image_file(Path::new(file.clone().as_str())));
+    let mut video_files: Vec<String> = files.clone();
+    video_files.retain(|ref file| is_video_file(Path::new(file.clone().as_str())));
 
     let album: Album = Album {
         id: sha1_from_path(path),
         src: path.to_str().unwrap().to_string(),
         artist: album_artist(path),
         title: album_title(path),
-        media: media_files,
-        cover: find_album_cover(path, cover_files)
+        audios: audio_files,
+        images: image_files.clone(),
+        videos: video_files,
+        cover: find_album_cover(path, image_files.clone())
     };
 
     return album;
 }
 
-fn is_album_cover(path: &Path) -> bool {
+fn is_audio_file(path: &Path) -> bool {
     match path.extension() {
-        Some(ext) => return IMAGE_EXTENSIONS.contains(
+        Some(ext) => return AUDIO_EXTENSIONS.contains(
             &ext
             .to_str()
             .unwrap()
@@ -184,9 +215,22 @@ fn is_album_cover(path: &Path) -> bool {
     };
 }
 
-fn is_media_file(path: &Path) -> bool {
+fn is_video_file(path: &Path) -> bool {
     match path.extension() {
-        Some(ext) => return MEDIA_EXTENSIONS.contains(
+        Some(ext) => return VIDEO_EXTENSIONS.contains(
+            &ext
+            .to_str()
+            .unwrap()
+            .to_lowercase()
+            .as_str()
+        ),
+        None => return false,
+    };
+}
+
+fn is_image_file(path: &Path) -> bool {
+    match path.extension() {
+        Some(ext) => return IMAGE_EXTENSIONS.contains(
             &ext
             .to_str()
             .unwrap()
@@ -257,6 +301,7 @@ fn find_albums(path: &Path) -> Vec<Album> {
     let mut dirs = readdir_recursive(path);
 
     // remove hidden directories and MACOSX dirs
+    // TODO: this only checks for hidden or MACOSX dirs on top level, but must on the dirname level
     dirs.retain(|dir| !dir.starts_with(".") && !dir.starts_with("__MACOSX"));
 
     for dir in &dirs {

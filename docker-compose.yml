@@ -4,6 +4,6 @@ services:
     build: .
     volumes:
       - ./:/usr/src/myapp
-      - ${LIBRARY_PATH}:/usr/src/myapp/Music
+      - ${LIBRARY_PATH}:/usr/src/myapp/Media
     ports:
       - "8000:8000"
