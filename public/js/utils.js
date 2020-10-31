@@ -36,28 +36,91 @@ export function hashCode(str) {
 }
 
 export function groupLibrary(library) {
-  library.groups = [];
-  const groupsByPath = {};
-  library.albums.forEach(function (album) {
-    album.cover = './library/' + encodeURI(album.cover);
-    const pathParts = album.src.split('/');
+  const dirs = [];
 
-    if (pathParts.length > 1) {
-      var dirPath = pathParts.slice(0, -1).join('/');
-      if (!groupsByPath[dirPath]) {
-        var group = {
-          id: dirPath,
-          title: dirPath,
-          src: dirPath,
-          albums: [album]
-        };
-        library.groups.push(group);
-        groupsByPath[dirPath] = group;
-      } else {
-        groupsByPath[dirPath].albums.push(album);
-      }
+  function makeGroups(parentDir = null) {
+    const groups = [];
+    const isAlbumDir = !!_.find(library.albums, ['src', parentDir]);
+
+    if (isAlbumDir) {
+      return groups;
     }
+
+    const subDirs = dirs.filter((dir) => {
+      if (parentDir) {
+        return pathParentDir(dir) === parentDir;
+      } else {
+        // root dir, without slash
+        return dir.indexOf('/') === -1;
+      }
+    });
+
+    subDirs.forEach((dirPath) => {
+      const isAlbumDir = !!_.find(library.albums, ['src', dirPath]);
+      if (isAlbumDir) {
+        return;
+      }
+
+      const group = {
+        id: dirPath,
+        title: pathBasename(dirPath),
+        src: dirPath,
+        groups: makeGroups(dirPath),
+        albums: findAlbums(dirPath),
+      };
+      groups.push(group);
+    });
+
+    return groups;
+  }
+
+  function collectGroups(parentGroup = null, groups = []) {
+    if (!parentGroup) {
+      library.rootGroups.forEach((group) => {
+        groups.push(group);
+        collectGroups(group, groups);
+      });
+    } else {
+      parentGroup.groups.forEach((group) => {
+        groups.push(group);
+        collectGroups(group, groups);
+      });
+    }
+
+    return groups;
+  }
+
+  function findAlbums(dirPath) {
+    return library.albums.filter((album) => {
+      return pathParentDir(album.src) === dirPath;
+    });
+  }
+
+  // collect groups and albums
+  // and at the same time only keep albums on top level
+  // that are in the root directory
+  library.rootAlbums = library.albums.filter(function (album) {
+    album.cover = './library/' + encodeURI(album.cover);
+
+    // album is in root dir, keep it
+    if (album.src.indexOf('/') === -1) {
+      return true;
+    }
+
+    // collects individual directories that are not albums
+    const dir = pathParentDir(album.src);
+    if (dirs.indexOf(dir) === -1) {
+      dirs.push(dir);
+    }
+
+    // album is not in root dir, remove it
+    return false;
   });
+
+  // dirs are already sorted naturally,
+  // this way subdirs appear lower
+  library.rootGroups = makeGroups();
+  library.groups = collectGroups();
 
   return library;
 }
@@ -73,4 +136,8 @@ export function pathBasename(path, ext = null) {
     return basename.substr(0, basename.length - ext.length);
   }
   return basename;
+}
+
+export function pathParentDir(path) {
+  return path.split('/').slice(0, -1).join('/');
 }

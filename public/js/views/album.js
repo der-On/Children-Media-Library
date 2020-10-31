@@ -1,6 +1,6 @@
 import albumCoverView from './albumCover.js';
 
-export default function albumsAlbumView(vnode, album) {
+export default function albumView(vnode, album) {
   const playing = vnode.state.store.get('playing', false);
   const selectedAlbumId = vnode.state.store.get('selectedAlbum');
   const isSelected = album.id === selectedAlbumId;
@@ -25,14 +25,14 @@ export default function albumsAlbumView(vnode, album) {
     className.push('is-playing');
   }
 
-  return m('.albums__album', {
+  return m('.covers__album', {
     className: className.join(' '),
     key: album.id
   }, [
     albumCoverView(vnode, album, {
       onclick
     }),
-    m('i.icon.albums__album-icon', {
+    m('i.icon.covers__album-icon', {
       className: isPlaying ? '' : 'is-hidden'
     }, playing ? 'play_circle_filled' : 'pause_circle_filled')
   ]);

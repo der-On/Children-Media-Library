@@ -204,13 +204,13 @@ const app = {
       vnode.state.idleTimeout = setTimeout(vnode.state.startScreenSaver, IDLE_DELAY);
     };
 
-    vnode.state.openAlbumGroup = function(albumGroupId) {
-      vnode.state.store.set('openedAlbumGroup', albumGroupId);
+    vnode.state.openGroup = function(groupId) {
+      vnode.state.store.set('openedGroup', groupId);
       lazyLoadDelayed();
     };
 
-    vnode.state.closeAlbumGroup = function() {
-      vnode.state.store.set('openedAlbumGroup', null);
+    vnode.state.closeGroup = function() {
+      vnode.state.store.set('openedGroup', null);
       lazyLoadDelayed();
     };
 
@@ -319,8 +319,8 @@ const app = {
       vnode.state.store.set('fullscreenAlbum', null);
     };
 
-    vnode.state.getAlbumGroupById = function(albumGroupId) {
-      return _.find(_.get(vnode.state, 'library.groups', []), ['id', albumGroupId]);
+    vnode.state.getGroupById = function(groupId) {
+      return _.find(_.get(vnode.state, 'library.groups', []), ['id', groupId]);
     };
 
     vnode.state.getAlbumById = function(albumId) {
@@ -443,8 +443,8 @@ const app = {
         return res.json();
       })
       .then(library => {
-        // vnode.state.library = library;
         vnode.state.library = groupLibrary(library);
+
         m.redraw();
         lazyLoad();
       })
@@ -474,7 +474,7 @@ const app = {
     const currentTime = vnode.state.store.get('playingCurrentTime');
     vnode.state.audioElement = document.getElementById('controls__playback-audio');
 
-    document.querySelector('.albums').addEventListener('scroll', lazyLoad);
+    document.querySelector('.covers').addEventListener('scroll', lazyLoad);
 
     // restore previous play state
     if (playing) {

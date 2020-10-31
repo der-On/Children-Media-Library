@@ -109,7 +109,7 @@ html, body {
 .audio {
   display: none;
 }
-.albums {
+.covers {
   list-style-type: none;
   margin: 0;
   padding: 0;
@@ -123,18 +123,18 @@ html, body {
   white-space: nowrap;
   line-height: 1;
 }
-.albums__group {
+.covers__group {
   display: inline-block;
   max-width: 100vw;
   white-space: normal;
   vertical-align: top;
 }
-.albums__album {
+.covers__album {
   position: relative;
   display: inline-block;
   margin: var(--grid-gutter) 0  0 var(--grid-gutter);
 }
-.albums__album-icon {
+.covers__album-icon {
   position: absolute;
   font-size: var(--icon-size);
   line-height: 1;
@@ -147,7 +147,7 @@ html, body {
   transition: all 0.25s linear;
   opacity: 1;
 }
-.albums__album-icon.is-hidden {
+.covers__album-icon.is-hidden {
   opacity: 0;
 }
 .album__cover,
@@ -200,11 +200,11 @@ html, body {
   color: rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
-.albums__album.is-selected .album__cover {
+.covers__album.is-selected .album__cover {
   border: 1px solid var(--color-white);
   box-shadow: var(--box-shadow-selected);
 }
-.albums__album.is-selected .album__cover-image {
+.covers__album.is-selected .album__cover-image {
   border: 1px solid var(--color-white);
 }
 .album__cover--fullscreen {
