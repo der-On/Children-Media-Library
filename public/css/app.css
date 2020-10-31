@@ -318,3 +318,51 @@ html, body {
 .lazy-load[data-loaded="false"] {
   background-image: none !important;
 }
+
+.gallery {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #000;
+  overflow: hidden;
+  z-index: 3;
+}
+.gallery__item {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.gallery__image {
+  margin: 0;
+  padding: 0;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  margin: auto auto;
+  position: relative;
+}
+.gallery__close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 15px;
+  color: #fff;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0.5;
+}
+.gallery__close:hover,
+.gallery__close:focus,
+.gallery__close:active {
+  opacity: 1;
+}
+.gallery__close-icon {
+  width: 32px;
+  height: auto;
+}

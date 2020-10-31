@@ -229,7 +229,6 @@ const app = {
         openedAlbumGallery: albumId,
         activeGalleyImage: 0
       });
-      lazyLoadDelayed();
     };
 
     vnode.state.closeAlbumGallery = function() {
