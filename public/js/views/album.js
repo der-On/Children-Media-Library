@@ -7,9 +7,9 @@ export default function albumView(vnode, album) {
   const playingAlbumId = vnode.state.store.get('playingAlbum');
   const isPlaying = album.id && album.id === playingAlbumId;
   const className = [];
-  const hasAudio = (album.audios || []).length > 1;
-  const hasImages = (album.images || []).length > 1;
-  const hasVideo = (album.videos || []).length > 1;
+  const hasAudio = (album.audios || []).length > 0;
+  const hasImages = (album.images || []).length > 0;
+  const hasVideo = (album.videos || []).length > 0;
   let onclick;
 
   if (album.onclick) {
