@@ -404,21 +404,19 @@ const app = {
     vnode.state.handleProgressHandleMouseMove = function (event) {
       const diffX = event.clientX - vnode.state.touches[0].clientX;
       const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
-
+      
       vnode.state.draggingCurrentTime = time;
     };
-
+    
     vnode.state.handleProgressHandleTouchMove = function (event) {
       const touch = event.changedTouches[0];
-      const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
-      const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
-
+      const time = vnode.state.getCurrentTimeFromProgressDrag(touch.clientX);
+      
       vnode.state.draggingCurrentTime = time;
     };
 
     vnode.state.handleProgressHandleMouseUp = function (event) {
-      const diffX = event.clientX - vnode.state.touches[0].clientX;
-      const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
+      const time = vnode.state.getCurrentTimeFromProgressDrag(event.clientX);
 
       vnode.state.audioElement.currentTime = time;
       vnode.state.draggingCurrentTime = -1;
@@ -431,11 +429,12 @@ const app = {
     vnode.state.handleProgressHandleTouchEnd = function (event) {
       if (event.changedTouches && event.changedTouches.length > 0) {
         const touch = event.changedTouches[0];
-        const diffX = touch.clientX - vnode.state.touches[touch.identifier].clientX;
-        const time = vnode.state.getCurrentTimeFromProgressDrag(diffX);
+        const time = vnode.state.getCurrentTimeFromProgressDrag(touch.clientX);
+        
         vnode.state.draggingCurrentTime = time;
+        vnode.state.audioElement.currentTime = vnode.state.draggingCurrentTime;
       }
-      vnode.state.audioElement.currentTime = vnode.state.store.get('draggingCurrentTime', vnode.state.audioElement.currentTime);
+      
       vnode.state.draggingCurrentTime = -1;
       vnode.state.touches = {};
 
@@ -449,7 +448,7 @@ const app = {
       const progressBox = progressElement.getBoundingClientRect();
       const width = progressBox.right - progressBox.left;
       const duration = vnode.state.audioElement.duration;
-      const pos = Math.max(x, 0.01);
+      const pos = Math.max(x - progressBox.left, 0.01);
       const time = (pos / width) * duration;
 
       return time;
