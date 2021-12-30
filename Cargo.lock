@@ -32,6 +32,7 @@ version = "1.0.0"
 dependencies = [
  "chrono",
  "cmd_lib",
+ "faccess",
  "futures",
  "hyper",
  "hyper-staticfile",
@@ -85,9 +86,8 @@ dependencies = [
 
 [[package]]
 name = "faccess"
-version = "0.2.3"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e039175679baf763ddddf4f76900b92d4dae9411ee88cf42d2f11b976b09e07c"
+version = "0.2.4"
+source = "git+https://github.com/MightyPork/faccess.git#0c94ef6d4b08a650ecaa31d4dcbd1b769f8cb56b"
 dependencies = [
  "bitflags",
  "libc",
