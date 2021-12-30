@@ -14,6 +14,7 @@ export default function controlsView(vnode) {
   const selectedAudioTrack = vnode.state.store.get('selectedAudioTrack', 0);
   const currentTime = vnode.state.store.get('playingCurrentTime', 0) || 0;
   const duration = vnode.state.store.get('playingDuration', 0) || 0;
+  const volume = vnode.state.store.get('volume', 1) || 1;
   const currentTrack = isPlaying ? playingTrack : selectedAudioTrack;
   let tracks = [];
   let hasAudio = false;
@@ -46,6 +47,19 @@ export default function controlsView(vnode) {
           formatTime(currentTime),
           ' / ',
           formatTime(duration)
+        ]),
+        m('.controls__volume', [
+          m('i.icon.controls__volume-icon.controls__volume-icon--down', {
+            onclick: vnode.state.handleVolumeDown,
+          }, 'volume_down'),
+          m('.controls__volume-bar', 
+            m('.controls__volume-bar-indicator', {
+              style: {width: (volume * 100) + '%'}
+            })
+          ),
+          m('i.icon.controls__volume-icon.controls__volume-icon--up', {
+            onclick: vnode.state.handleVolumeUp,
+          }, 'volume_up'),
         ]),
         playbackControlsView(vnode, selectedAlbum)
     ] : null

@@ -10,6 +10,7 @@ import {
   IDLE_DELAY,
   HEADER_DRAG_DOWN_DISTANCE,
   HEADER_NAV_ITEM_PRESS_DURATION,
+  VOLUME_STEP,
 } from './constants.js';
 import appView from './views/app.js';
 
@@ -443,6 +444,16 @@ const app = {
       document.body.removeEventListener('touchmove', vnode.state.handleProgressHandleTouchMove);
     };
 
+    vnode.state.handleVolumeDown = function () {
+      vnode.state.audioElement.volume = Math.max(vnode.state.audioElement.volume - VOLUME_STEP, 0.001);
+      vnode.state.store.set('volume', vnode.state.audioElement.volume);
+    };
+
+    vnode.state.handleVolumeUp = function () {
+      vnode.state.audioElement.volume = Math.min(vnode.state.audioElement.volume + VOLUME_STEP, 1);
+      vnode.state.store.set('volume', vnode.state.audioElement.volume);
+    };
+
     vnode.state.getCurrentTimeFromProgressDrag = function (x) {
       const progressElement = document.getElementById('controls__playback-progress');
       const progressBox = progressElement.getBoundingClientRect();
@@ -498,6 +509,8 @@ const app = {
     document.querySelector('.covers').addEventListener('scroll', lazyLoad);
 
     // restore previous play state
+    vnode.state.audioElement.volume = vnode.state.store.get('volume', 1);
+
     if (playing) {
       vnode.state.pause(albumId);
 

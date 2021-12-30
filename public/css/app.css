@@ -251,8 +251,36 @@ html, body {
 }
 .controls__duration {
   position: absolute;
-  right: calc(var(--grid-gutter) * 2);
+  right: calc(var(--grid-gutter) * 24);
   bottom: calc(var(--grid-gutter) * 3);
+}
+.controls__volume {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  right: calc(var(--grid-gutter) * 2);
+  bottom: calc(var(--grid-gutter) * 2.25);
+}
+.controls__volume-bar {
+  width: calc(var(--grid-gutter) * 10);
+  height: calc(var(--icon-size) * 0.15);
+  background: rgba(255, 255, 255, 0.25);
+  position: relative;
+  margin: 0 var(--grid-gutter);
+}
+.controls__volume-bar-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.5);
+}
+.controls__volume-icon {
+  font-size: calc(var(--icon-size) * 0.5);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
 }
 .controls__playback {
   top: calc(var(--grid-gutter) * 0.5);
