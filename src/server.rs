@@ -44,7 +44,10 @@ async fn request_handler(
             }
         }
         (&Method::POST, "/shutdown") => {
-            let output = cmd_lib::run_cmd!("sh raspi/shutdown.sh");
+            eprintln!("Shuting down ...");
+            let output = cmd_lib::run_fun!(
+                sh raspi/shutdown.sh
+            );
 
             match output {
                 Ok(_) => {
@@ -65,7 +68,10 @@ async fn request_handler(
             }
         }
         (&Method::POST, "/scan") => {
-            let output = cmd_lib::run_cmd!("sh raspi/scan.sh");
+            eprintln!("Scanning library ...");
+            let output = cmd_lib::run_fun!(
+                sh raspi/scan.sh
+            );
 
             match output {
                 Ok(_) => {
