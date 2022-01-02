@@ -15,6 +15,7 @@ Name=AutoChildrenAudioLibrary
 Comment=Start Children Audio Library when GNOME starts" > ~/.config/autostart/autoChildrenAudioLibrary.desktop
 
 echo "Disabling Chromium update notification"
+sudo mkdir -p /etc/chromium-browser/customizations
 sudo touch /etc/chromium-browser/customizations/01-disable-update-check;echo CHROMIUM_FLAGS=\"\$\{CHROMIUM_FLAGS\} --check-for-update-interval=31536000\" | sudo tee /etc/chromium-browser/customizations/01-disable-update-check
 
 echo "Setup complete."
