@@ -279,7 +279,8 @@ const app = {
       const selectedAlbumId = vnode.state.store.get('selectedAlbum');
       const playingAlbum = vnode.state.getAlbumById(playingAlbumId);
       const selectedAlbum = vnode.state.getAlbumById(selectedAlbumId);
-
+      const isPlaying = vnode.state.store.get('playing', false);
+      
       if (selectedAlbum && playingAlbum && selectedAlbumId !== playingAlbumId) {
         const nextTrack = Math.min(
           vnode.state.store.get('selectedAudioTrack', 0) + 1,
@@ -293,10 +294,12 @@ const app = {
         );
         vnode.state.store.set('playingTrack', nextTrack);
 
-        vnode.state.whenAudioLoaded()
-        .then(() => {
-          vnode.state.audioElement.play();
-        });
+        if (isPlaying) {
+          vnode.state.whenAudioLoaded()
+          .then(() => {
+            vnode.state.audioElement.play();
+          });
+        }
       }
     };
 
@@ -307,6 +310,7 @@ const app = {
       const playingAlbum = vnode.state.getAlbumById(playingAlbumId);
       const selectedAlbum = vnode.state.getAlbumById(selectedAlbumId);
       const currentTime = vnode.state.store.get('playingCurrentTime');
+      const isPlaying = vnode.state.store.get('playing', false);
 
       if (selectedAlbum && playingAlbum && selectedAlbumId !== playingAlbumId) {
         const prevTrack = Math.max(
@@ -324,10 +328,12 @@ const app = {
           );
           vnode.state.store.set('playingTrack', prevTrack);
 
-          vnode.state.whenAudioLoaded()
-          .then(() => {
-            vnode.state.audioElement.play();
-          });
+          if (isPlaying) {
+            vnode.state.whenAudioLoaded()
+            .then(() => {
+              vnode.state.audioElement.play();
+            });
+          }
         }
       }
     };
