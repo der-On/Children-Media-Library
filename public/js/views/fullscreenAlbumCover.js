@@ -8,7 +8,7 @@ export default function fullscreenAlbumCoverView(vnode) {
     title: `${album.artist} - ${album.title}`
   }, [
     m('.album__cover-image', {
-      style: `background-image: url("${album.cover}")`
+      style: `background-image: url("${album.cover}?w=${window.innerWidth}&h=${window.innerHeight}")`
     })
   ]) : null;
 }

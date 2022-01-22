@@ -9,7 +9,7 @@ export default function groupCoverView(vnode, group, args = {}) {
   const backgroundImages = group.albums
   .slice(0, 4)
   .map(function (album) {
-    return `url("${album.cover}")`;
+    return `url("${album.cover}?w=70&h=70")`;
   });
   return m('figure.album__group-cover', _.assign({
     style: `background-color: ${albumColor(group, 50, 60)};`,

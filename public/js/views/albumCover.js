@@ -18,7 +18,7 @@ export default function albumCoverView(vnode, album, args = {}) {
     const backgroundImages = album.images
     .slice(0, 4)
     .map(function (image) {
-      return `url("${image}")`;
+      return `url("${image}?w=70&h=70")`;
     });
     return m('figure.album__group-cover', _.assign({
       style: `background-color: ${albumColor(album, 50, 60)};`,
@@ -31,7 +31,7 @@ export default function albumCoverView(vnode, album, args = {}) {
       })
     ]);
   } else {
-    const backgroundImage = `url("${album.cover}")`;
+    const backgroundImage = `url("${album.cover}?w=140&h=140")`;
     return m('figure.album__cover', _.assign({
       style: `background-color: ${albumColor(album, 50, 60)};`,
       title: title,
