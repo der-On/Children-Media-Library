@@ -202,7 +202,7 @@ fn scan_album(path: &Path) -> Album {
     return album;
 }
 
-fn is_audio_file(path: &Path) -> bool {
+pub fn is_audio_file(path: &Path) -> bool {
     match path.extension() {
         Some(ext) => return AUDIO_EXTENSIONS.contains(
             &ext
@@ -215,7 +215,7 @@ fn is_audio_file(path: &Path) -> bool {
     };
 }
 
-fn is_video_file(path: &Path) -> bool {
+pub fn is_video_file(path: &Path) -> bool {
     match path.extension() {
         Some(ext) => return VIDEO_EXTENSIONS.contains(
             &ext
@@ -228,7 +228,7 @@ fn is_video_file(path: &Path) -> bool {
     };
 }
 
-fn is_image_file(path: &Path) -> bool {
+pub fn is_image_file(path: &Path) -> bool {
     match path.extension() {
         Some(ext) => return IMAGE_EXTENSIONS.contains(
             &ext

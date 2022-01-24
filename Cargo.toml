@@ -15,7 +15,7 @@ hyper-staticfile = "0.8"
 serde = "1.0"
 serde_derive = "1.0"
 serde_json = "1.0"
-percent-encoding = "2.0.1"
+percent-encoding = "2.1.0"
 chrono = "0.4.2"
 sha1 = "0.6.0"
 natord = "1.0.9"
@@ -23,7 +23,8 @@ log = "0.4.8"
 tokio = { version = "1.15.0", features = ["full"] }
 cmd_lib = "1.3.0"
 faccess = "0.2.4"
-image = "0.23.14"
+url = "2.2.2"
+md5 = "0.7.0"
 
 [patch.crates-io]
 faccess = { git = 'https://github.com/MightyPork/faccess.git' }

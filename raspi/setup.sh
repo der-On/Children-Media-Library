@@ -3,6 +3,9 @@
 cd "$(dirname "$0")"
 cd ..
 
+echo "Installing dependencies ..."
+sudo apt-get update && sudo apt-get install imagemagick -y
+
 echo "Setting up autostart on boot to desktop ..."
 mkdir -p ~/.config/autostart
 echo "[Desktop Entry]

@@ -6,6 +6,7 @@ use std::fs::File;
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Config {
     pub library: String,
+    pub cache: String,
     pub port: u16
 }
 
