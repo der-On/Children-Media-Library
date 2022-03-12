@@ -26,7 +26,7 @@ const Gallery = {
 function imageView(image) {
   return m('li.splide__slide.gallery__item',
     m('img.gallery__image', {
-      'data-splide-lazy': image
+      'data-splide-lazy': `${image}?w=${window.innerWidth}&h=${window.innerHeight}` 
     })
   );
 }
