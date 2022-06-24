@@ -205,8 +205,7 @@ const app = {
         }
       })
       .then((text) => {
-        vnode.state.isUpdating = false;
-        window.location.reload();
+        // system should reboot
       })
       .catch((err) => {
         vnode.state.isUpdating = false;
