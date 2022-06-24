@@ -3,6 +3,14 @@
 cd "$(dirname "$0")"
 cd ..
 
+PID_FILE=server.pid
+if test -f "$PID_FILE"; then
+    OLD_SERVER_PID=$(cat server.pid)
+    echo "Killing already running server ..."
+    kill $OLD_SERVER_PID
+    rm $PID_FILE
+fi
+
 sleep 5
 ./raspi/bin/cli scan
 
@@ -17,5 +25,6 @@ xset -dpms
 
 ./raspi/bin/server &
 SERVER_PID=$!
+echo $SERVER_PID > server.pid
 /usr/bin/chromium-browser --disable-component-update --noerrdialogs --disable-session-crashed-bubble --disable-infobars --disable-pinch --overscoll-history-navigation=0 --kiosk http://localhost:8000
 kill $SERVER_PID

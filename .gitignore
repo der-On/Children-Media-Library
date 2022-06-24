@@ -64,3 +64,6 @@ typings/
 
 /target/
 **/*.rs.bk
+
+# PID files
+server.pid
