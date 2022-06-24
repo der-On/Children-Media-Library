@@ -205,7 +205,7 @@ async fn request_handler(
                 Ok(_) => {
                     Ok(Response::builder()
                         .status(StatusCode::OK)
-                        .body("Update initialized.".into())
+                        .body("Update finished.".into())
                         .unwrap()
                     )
                 },
