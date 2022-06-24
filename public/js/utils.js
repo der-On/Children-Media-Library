@@ -120,11 +120,32 @@ export function groupLibrary(library) {
     return false;
   });
 
+  function createRecentGroup() {
+    const recentAlbums = _.reverse(
+      _.sortBy(library.albums, ['createdAt'])
+    );
+    
+    const group = {
+      id: 'recent',
+      title: 'Recent',
+      src: null,
+      groups: [],
+      albums: recentAlbums,
+    };
+
+    return group;
+  }
+
   // dirs are already sorted naturally,
   // this way subdirs appear lower
+  const recentGroup = createRecentGroup();
   library.rootGroups = makeGroups();
   library.groups = collectGroups();
 
+  // finally add virtual recent group as first
+  library.rootGroups.unshift(recentGroup);
+  library.groups.unshift(recentGroup);
+  console.log(library);
   return library;
 }
 

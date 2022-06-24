@@ -43,7 +43,8 @@ pub struct Album {
     audios: Vec<String>,
     images: Vec<String>,
     videos: Vec<String>,
-    cover: String
+    cover: String,
+    createdAt: String,
 }
 
 pub fn scan(path: String) -> Library {
@@ -95,7 +96,8 @@ pub fn scan(path: String) -> Library {
             audios: audio_files,
             images: image_files,
             videos: video_files,
-            cover
+            cover,
+            createdAt: album.createdAt
         });
     }
 
@@ -188,6 +190,14 @@ fn scan_album(path: &Path) -> Album {
     let mut video_files: Vec<String> = files.clone();
     video_files.retain(|ref file| is_video_file(Path::new(file.clone().as_str())));
 
+    let album_metadata = fs::metadata(path);
+    let mut created_at: String = String::new();
+    
+    if let Ok(created_time) = album_metadata.unwrap().created() {
+        let created_time_dt: DateTime<Utc> = created_time.clone().into();
+        created_at = created_time_dt.to_rfc3339();
+    }
+
     let album: Album = Album {
         id: sha1_from_path(path),
         src: path.to_str().unwrap().to_string(),
@@ -196,7 +206,8 @@ fn scan_album(path: &Path) -> Album {
         audios: audio_files,
         images: image_files.clone(),
         videos: video_files,
-        cover: find_album_cover(path, image_files.clone())
+        cover: find_album_cover(path, image_files.clone()),
+        createdAt: created_at
     };
 
     return album;
