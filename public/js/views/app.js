@@ -12,6 +12,7 @@ import screenSaverView from './screenSaver.js';
 export default function appView(vnode) {
   const screenSaverIsActive = vnode.state.screenSaverIsActive;
   const isShuttingDown = vnode.state.isShuttingDown;
+  const isUpdating = vnode.state.isUpdating;
 
   const group = vnode.state.getGroupById(vnode.state.store.get('openedGroup'));
   const album = vnode.state.getAlbumById(vnode.state.store.get('selectedAlbum'));
@@ -23,7 +24,7 @@ export default function appView(vnode) {
     color = albumColor(album);
   }
   return m('main.main', {
-    class: (screenSaverIsActive || isShuttingDown) ? 'has-screen-saver' : '',
+    class: (screenSaverIsActive || isShuttingDown || isUpdating) ? 'has-screen-saver' : '',
     onmousedown: vnode.state.handleMouseDown,
     onmousemove: vnode.state.handleUserInput,
     ontouchstart: vnode.state.handleTouchStart,

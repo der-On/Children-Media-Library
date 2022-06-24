@@ -195,6 +195,30 @@ async fn request_handler(
                 }
             }
         }
+        (&Method::POST, "/update-app") => {
+            eprintln!("Updating ...");
+            let output = cmd_lib::run_fun!(
+                sh raspi/update.sh
+            );
+
+            match output {
+                Ok(_) => {
+                    Ok(Response::builder()
+                        .status(StatusCode::OK)
+                        .body("Update initialized.".into())
+                        .unwrap()
+                    )
+                },
+                error => {
+                    eprintln!("Error during update: {:?}", error);
+                    Ok(Response::builder()
+                        .status(StatusCode::INTERNAL_SERVER_ERROR)
+                        .body("Error during update.".into())
+                        .unwrap()
+                    )
+                }
+            }
+        }
         _ => {
             Ok(Response::builder()
                 .status(StatusCode::NOT_FOUND)

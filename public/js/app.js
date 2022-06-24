@@ -21,6 +21,8 @@ const app = {
     vnode.state.screenSaverIsActive = false;
     vnode.state.touches = {};
     vnode.state.draggingCurrentTime = -1;
+    vnode.state.isUpdating = false;
+    vnode.state.isShuttingDown = false;
 
     vnode.state.handleMouseDown = function (event) {
       vnode.state.handleUserInput(event);
@@ -136,7 +138,7 @@ const app = {
     };
 
     vnode.state.handleScreenSaverClick = function () {
-      if (vnode.state.isShuttingDown) {
+      if (vnode.state.isShuttingDown || vnode.state.isUpdating) {
         return false;
       }
 
@@ -183,6 +185,31 @@ const app = {
         vnode.state.loadLibrary();
       })
       .catch((err) => {
+        console.error(err);
+      });
+      m.redraw();
+    };
+
+    vnode.state.updateApp = function () {
+      vnode.state.isUpdating = true;
+      m.redraw();
+
+      fetch('/update-app', {
+        method: 'POST'
+      })
+      .then((res) => {
+        if (res.ok) {
+          return res.text();
+        } else {
+          throw new Error('Error during update');
+        }
+      })
+      .then((text) => {
+        vnode.state.isUpdating = false;
+        window.location.reload();
+      })
+      .catch((err) => {
+        vnode.state.isUpdating = false;
         console.error(err);
       });
       m.redraw();
