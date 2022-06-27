@@ -190,12 +190,18 @@ fn scan_album(path: &Path) -> Album {
     let mut video_files: Vec<String> = files.clone();
     video_files.retain(|ref file| is_video_file(Path::new(file.clone().as_str())));
 
-    let album_metadata = fs::metadata(path);
+    let album_metadata = fs::metadata(path).unwrap();
     let mut created_at: String = String::new();
     
-    if let Ok(created_time) = album_metadata.unwrap().created() {
+    // get creation timestamp
+    if let Ok(created_time) = album_metadata.created() {
         let created_time_dt: DateTime<Utc> = created_time.clone().into();
         created_at = created_time_dt.to_rfc3339();
+    }
+    // fallback to modified timestamp
+    else if let Ok(updated_time) = album_metadata.modified() {
+        let updated_time_dt: DateTime<Utc> = updated_time.clone().into();
+        created_at = updated_time_dt.to_rfc3339();
     }
 
     let album: Album = Album {
@@ -312,8 +318,7 @@ fn find_albums(path: &Path) -> Vec<Album> {
     let mut dirs = readdir_recursive(path);
 
     // remove hidden directories and MACOSX dirs
-    // TODO: this only checks for hidden or MACOSX dirs on top level, but must on the dirname level
-    dirs.retain(|dir| !dir.starts_with(".") && !dir.starts_with("__MACOSX"));
+    dirs.retain(|dir| !dir.starts_with(".") && !dir.contains("/.") && !dir.starts_with("__MACOSX") && !dir.contains("/__MACOSX"));
 
     for dir in &dirs {
         let _dir = dir.clone();
