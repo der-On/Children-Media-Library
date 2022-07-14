@@ -538,7 +538,8 @@ const app = {
     const currentTime = vnode.state.store.get('playingCurrentTime');
     vnode.state.audioElement = document.getElementById('controls__playback-audio');
 
-    document.querySelector('.covers').addEventListener('scroll', lazyLoad);
+    vnode.state.coversEl = document.querySelector('.covers');
+    vnode.state.coversEl.addEventListener('scroll', lazyLoad);
 
     // restore previous play state
     vnode.state.audioElement.volume = vnode.state.store.get('volume', 1);

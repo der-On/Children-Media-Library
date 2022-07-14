@@ -14,6 +14,8 @@ export function lazyLoad() {
       el.setAttribute('data-loaded', 'true');
     }
   });
+  
+  m.redraw();
 }
 
 export const lazyLoadDelayed = () => {
