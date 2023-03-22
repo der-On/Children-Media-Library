@@ -1,4 +1,4 @@
-FROM rust:1.42.0
+FROM rust:1.68.0
 
 VOLUME ['/usr/src/myapp']
 

@@ -5,7 +5,7 @@ cd ..
 
 docker run \
    --volume ${PWD}:/home/cross/project \
-   ragnaroek/rust-raspberry:1.59.0 \
+   ragnaroek/rust-raspberry:1.68.0 \
    build --release
 
 cp -R target/arm-unknown-linux-gnueabihf/release/cli ./raspi/bin/cli && \
