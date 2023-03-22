@@ -28,6 +28,10 @@ pub const IMAGE_EXTENSIONS: [&str; 3] = [
     "png"
 ];
 
+pub const PODCAST_EXTENSIONS: [&str; 1] = [
+    "podcast"
+];
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Library {
     pub updatedAt: String,
@@ -43,6 +47,7 @@ pub struct Album {
     audios: Vec<String>,
     images: Vec<String>,
     videos: Vec<String>,
+    podcasts: Vec<String>,
     cover: String,
     createdAt: String,
 }
@@ -69,6 +74,7 @@ pub fn scan(path: String) -> Library {
         let mut audio_files: Vec<String> = Vec::new();
         let mut image_files: Vec<String> = Vec::new();
         let mut video_files: Vec<String> = Vec::new();
+        let mut podcast_files: Vec<String> = Vec::new();
 
         for file in album.audios {
             let mut _file = file.clone();
@@ -88,6 +94,12 @@ pub fn scan(path: String) -> Library {
             video_files.push(_file);
         }
 
+        for file in album.podcasts {
+            let mut _file = file.clone();
+            _file.drain(0..prefix_length);
+            podcast_files.push(_file);
+        }
+
         albums.push(Album {
             id: album.id.clone(),
             artist: album.artist.clone(),
@@ -96,6 +108,7 @@ pub fn scan(path: String) -> Library {
             audios: audio_files,
             images: image_files,
             videos: video_files,
+            podcasts: podcast_files,
             cover,
             createdAt: album.createdAt
         });
@@ -164,7 +177,8 @@ fn readdir_recursive(path: &Path) -> Vec<String> {
 fn album_contains_media(album: &Album) -> bool {
     album.audios.len() > 0 ||
     album.images.len() > 0 ||
-    album.videos.len() > 0
+    album.videos.len() > 0 ||
+    album.podcasts.len() > 0
 }
 
 fn is_dir(path: &Path) -> bool {
@@ -189,6 +203,8 @@ fn scan_album(path: &Path) -> Album {
     image_files.retain(|ref file| is_image_file(Path::new(file.clone().as_str())));
     let mut video_files: Vec<String> = files.clone();
     video_files.retain(|ref file| is_video_file(Path::new(file.clone().as_str())));
+    let mut podcast_files: Vec<String> = files.clone();
+    podcast_files.retain(|ref file| is_podcast_file(Path::new(file.clone().as_str())));
 
     let album_metadata = fs::metadata(path).unwrap();
     let mut created_at: String = String::new();
@@ -212,6 +228,7 @@ fn scan_album(path: &Path) -> Album {
         audios: audio_files,
         images: image_files.clone(),
         videos: video_files,
+        podcasts: podcast_files,
         cover: find_album_cover(path, image_files.clone()),
         createdAt: created_at
     };
@@ -248,6 +265,19 @@ pub fn is_video_file(path: &Path) -> bool {
 pub fn is_image_file(path: &Path) -> bool {
     match path.extension() {
         Some(ext) => return IMAGE_EXTENSIONS.contains(
+            &ext
+            .to_str()
+            .unwrap()
+            .to_lowercase()
+            .as_str()
+        ),
+        None => return false,
+    };
+}
+
+pub fn is_podcast_file(path: &Path) -> bool {
+    match path.extension() {
+        Some(ext) => return PODCAST_EXTENSIONS.contains(
             &ext
             .to_str()
             .unwrap()

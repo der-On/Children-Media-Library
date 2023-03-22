@@ -122,7 +122,9 @@ export function groupLibrary(library) {
 
   function createRecentGroup() {
     const recentAlbums = _.reverse(
-      _.sortBy(library.albums, ['createdAt'])
+      _.sortBy(library.albums.filter(album => {
+        return !album.isPodcast;
+      }), ['createdAt'])
     );
     
     const group = {
@@ -149,8 +151,12 @@ export function groupLibrary(library) {
   return library;
 }
 
-function getLibraryPath(path) {
-  return './library/' + encodeURI(path);
+export function getLibraryPath(path) {
+  if (path && path.indexOf('http') !== 0 && path.indexOf('./proxy/') !== 0) {
+    return './library/' + encodeURI(path);
+  } else {
+    return path;
+  }
 }
 
 export function pathExtname(path) {

@@ -5,6 +5,7 @@ extern crate percent_encoding;
 extern crate cmd_lib;
 extern crate url;
 extern crate md5;
+extern crate reqwest;
 
 use std::path::Path;
 use std::io::{Error, ErrorKind};
@@ -64,7 +65,23 @@ async fn request_handler(
         (&Method::GET, _) => {
             let uri = req.uri();
 
-            if path.starts_with("/library/") == true {
+            if path.starts_with("/proxy/") == true {
+                let new_uri_str = format!("{}", uri.path()).replace("/proxy/", "");
+                let response = reqwest::get(new_uri_str).await?;
+                let response_headers = response.headers();
+                let mut builder = Response::builder();
+
+                for (key, value) in response_headers {
+                    builder = builder.header(key, value);
+                }
+        
+                let new_response = builder
+                    .status(response.status())
+                    .body(Body::wrap_stream(response.bytes_stream()))?;
+        
+                Ok(new_response)
+            }
+            else if path.starts_with("/library/") == true {
                 let new_uri_str = format!("{}", uri.path()).replace("/library/", "/");
                 let full_uri = "http://localhost".to_owned() + &uri.to_string();
                 let full_new_uri = "http://localhost".to_owned() + &new_uri_str.to_string();

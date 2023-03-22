@@ -1,6 +1,7 @@
 import store from './store.js';
 import {
-  groupLibrary
+  groupLibrary,
+  getLibraryPath,
 } from './utils.js';
 import {
   lazyLoad,
@@ -255,7 +256,7 @@ const app = {
       vnode.state.store.set({
         openedAlbumGallery: albumId,
         activeGalleyImage: 0
-      });
+      });      
     };
 
     vnode.state.closeAlbumGallery = function() {
@@ -507,12 +508,118 @@ const app = {
         return res.json();
       })
       .then(library => {
+        return vnode.state.loadPodcasts(library);
+      })
+      .then(library => {
         vnode.state.library = groupLibrary(library);
 
         m.redraw();
         lazyLoad();
       })
       .catch(console.error.bind(console));
+    };
+
+    vnode.state.loadPodcasts = function (library) {
+      const promises = [];
+      
+      library.albums.forEach(album => {
+        if (album.podcasts.length) {
+          library.albums.splice(library.albums.indexOf(album), 1);
+        }
+        
+        album.podcasts.forEach(podcastFile => {
+          const promise = fetch(getLibraryPath(podcastFile))
+          .then(res => {
+            if (!res.ok) {
+              return Promise.reject(new Error('Unable to load podcast file ' + podcastFile + '.'));
+            }
+    
+            return res.text();
+          })
+          .then(body => {
+            const podcastUrls = body.trim().split("\n").map(_.trim);
+            
+            return Promise.all(podcastUrls.map(url => {
+              return vnode.state.loadPodcast(url)
+              .then(podcastAlbums => {
+                podcastAlbums.forEach(podcastAlbum => {
+                  podcastAlbum.src = podcastFile.replace(/\//g, '_') + '/' + podcastAlbum.index;
+                  library.albums.push(podcastAlbum);
+                });
+              });
+            }));
+          });
+
+          promises.push(promise);
+        });
+      });
+
+      return Promise.all(promises)
+      .then(() => {
+        console.log(library);
+        return library;
+      });
+    };
+
+    vnode.state.loadPodcast = function (url) {
+      return fetch('./proxy/' + url, {
+        cache: 'no-cache',
+      })
+      .then(res => {
+        if (!res.ok) {
+          return Promise.reject(new Error('Unable to load podcast ' + url + '.'));
+        }
+
+        return res.text();
+      })
+      .then(body => {
+        const feed = new DOMParser().parseFromString(body, 'text/xml');        
+        const channelNode = feed.querySelector('channel');
+        const titleNode = channelNode.querySelector('title');
+        const imageNode = channelNode.getElementsByTagName('itunes:image').item(0);
+        const itemNodes = Array.from(channelNode.querySelectorAll('item'));
+        const pubDateNode = channelNode.querySelector('pubDate');
+        const authorNode = channelNode.getElementsByTagName('itunes:author').item(0);
+        
+        return itemNodes.map((itemNode, index) => {
+          const enclosureNode = itemNode.querySelector('enclosure');      
+          const itemTitleNode = itemNode.querySelector('title');
+          const itemPubDateNode = itemNode.querySelector('pubDate');
+          const itemImageNode = itemNode.getElementsByTagName('itunes:image').item(0);
+          const itemAuthorNode = itemNode.getElementsByTagName('itunes:author').item(0);
+          const itemUrl = enclosureNode ? enclosureNode.getAttribute('url') : null;
+          const descriptionNode = itemNode.querySelector('description');
+          let imageUrl = null;
+        
+          if (itemImageNode) {
+            imageUrl = itemImageNode.getAttribute('href');
+          } else if (descriptionNode && descriptionNode.innerHTML.indexOf('<img src="') !== -1) {
+            const matches = descriptionNode.innerHTML.match(/<img src="(.*)"/);
+            imageUrl = matches[1].slice(0, matches[1].indexOf('"'));            
+          } else if (imageNode) {
+            imageUrl = imageNode.getAttribute('href');
+          }
+          
+          return {
+            isPodcast: true,
+            index: index,
+            id: url + '_' + index,
+            title: itemTitleNode 
+              ? itemTitleNode.innerHTML 
+              : (titleNode ? titleNode.innerHTML : url),
+            cover: imageUrl,
+            artist: itemAuthorNode 
+              ? itemAuthorNode.innerHTML
+              : (authorNode ? authorNode.innerHTML : null),
+            audios: itemUrl ? ['./proxy/' + itemUrl] : [],
+            images: [],
+            videos: [],
+            createdAt: itemPubDateNode 
+              ? (new Date(itemPubDateNode.innerHTML)).toJSON()
+              : (pubDateNode ? (new Date(pubDateNode.innerHTML)).toJSON() : null),
+          };          
+        });
+      });
     };
 
     vnode.state.whenAudioLoaded = function() {
