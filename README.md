@@ -18,6 +18,7 @@ Web based media library for children. Made for the Raspberry Pi 7" Touchscreen.
 - [x] make it work completly offline
 - [x] provide a CLI to rescan library folder(s) and stop/start/maintain it
 - [x] allow browsing and swiping through image galleries
+- [x] allow adding podcasts using RSS feeds
 - [ ] allow browsing and viewing of videos
 
 ## Configuration
@@ -85,6 +86,12 @@ sudo reboot
 
 This will install all dependencies and make the audio library start on boot in kiosk mode.
 
+## Podcasts
+
+You can add podcasts that provide RSS feeds.
+For this to work you must create a top level folder (e.g. "Podcasts") in your library.
+
+Within that folder create *.podcast files and copy the URLs to the podcast RSS feeds into that file. One URL per line.
 
 ## Credits
 
